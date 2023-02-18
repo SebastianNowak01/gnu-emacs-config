@@ -20,20 +20,18 @@
 ;; Set font and it's size
 (set-face-attribute 'default nil :font "Fira Code Retina" :height my-default-font-size)
 
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 260)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height 295 :weight 'regular)
+
 ;; Set theme (init can fail so wombat can save eyes[dark mode])
 (load-theme 'wombat)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; MM Elisp functions and keybinds
-(global-set-key (kbd "M-RET") 'my-split-window-vertically-and-focus-vterm)
-(global-set-key (kbd "C-x 2") 'my-split-window-vertically-and-focus)
-(global-set-key (kbd "C-x 3") 'my-split-window-horizontally-and-focus)
-(global-set-key (kbd "M-<up>") 'move-dup-move-lines-up)
-(global-set-key (kbd "M-<down>") 'move-dup-move-lines-down)
-(global-set-key (kbd "C-M-<up>") 'move-dup-duplicate-up)
-(global-set-key (kbd "C-M-<down>") 'move-dup-duplicate-down)
-(global-set-key (kbd "C-t") 'goto-line-preview)
 (global-set-key (kbd "C-h") 'backward-char)
 (global-unset-key (kbd "C-j"))
 (global-set-key (kbd "C-j") 'next-line)
@@ -44,8 +42,71 @@
 (global-set-key (kbd "C-M-j") nil)
 (global-set-key (kbd "C-M-j") (lambda () (interactive) (next-line 4)))
 (global-set-key (kbd "C-M-k") (lambda () (interactive) (previous-line 4)))
+(global-set-key (kbd "C-M-l") 'right-word)
+(global-set-key (kbd "C-m") 'back-to-indentation)
+(global-set-key (kbd "RET") 'newline)
+
+(global-set-key (kbd "C-c w") 'toggle-truncate-lines)
+
+(global-set-key (kbd "C-n") 'electric-newline-and-maybe-indent)
+(global-set-key (kbd "C-f") 'kill-line)
+(global-set-key (kbd "C-p") 'help-command)
+(global-set-key (kbd "C-b") 'recenter-top-bottom)
+(global-set-key (kbd "C-M-o") 'counsel-switch-buffer)
+
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "M-y") 'counsel-yank-pop)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "<f2> j") 'counsel-set-variable)
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-c v") 'ivy-push-view)
+(global-set-key (kbd "C-c V") 'ivy-pop-view)
+(global-set-key (kbd "C-c c") 'counsel-compile)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c L") 'counsel-git-log)
+(global-set-key (kbd "C-c k") 'counsel-rg)
+(global-set-key (kbd "C-c m") 'counsel-linux-app)
+(global-set-key (kbd "C-c f") 'counsel-fzf)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-c J") 'counsel-file-jump)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "C-c b") 'counsel-bookmark)
+(global-set-key (kbd "C-c d") 'counsel-descbinds)
+(global-set-key (kbd "C-c o") 'counsel-outline)
+(global-set-key (kbd "C-c t") 'counsel-load-theme)
+(global-set-key (kbd "C-c F") 'counsel-org-file)
+
+(global-set-key (kbd "C-x K") 'mm/kill-everything)
 
 (global-set-key (kbd "C-t") 'goto-line-preview)
+
+(global-set-key (kbd "M-<up>") 'move-dup-move-lines-up)
+(global-set-key (kbd "M-<down>") 'move-dup-move-lines-down)
+(global-set-key (kbd "C-M-<up>") 'move-dup-duplicate-up)
+(global-set-key (kbd "C-M-<down>") 'move-dup-duplicate-down)
+
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C-.") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-,") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-,") 'mc/mark-all-like-this)
+
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(global-set-key (kbd "M-RET") 'mm/split-window-horizontally-and-focus-vterm)
+(global-set-key (kbd "C-x 2") 'mm/split-window-vertically-and-focus)
+(global-set-key (kbd "C-x 3") 'mm/split-window-horizontally-and-focus)
+(global-set-key (kbd "C-r") 'mm/go-to-saved-point)
+(global-set-key (kbd "C-s") (lambda () (interactive) (mm/save-point-and-fn 'swiper)))
+(global-set-key (kbd "C-M-s") 'mm/save-point)
+(global-set-key (kbd "C-`") 'mm/toggle-vterm-below)
+
 
 ;; Auto close (), "", {}
 (electric-pair-mode 1)
@@ -77,7 +138,7 @@
  '(custom-safe-themes
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
  '(package-selected-packages
-   '(yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
+   '(eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -95,9 +156,11 @@
 ;; Disable line numbers for some modes
 (dolist (mode '(org-mode-hook
                 term-mode-hook
-		shell-mode-hook
 		vterm-mode-hook
-		treemacs-mode-hook
+                treemacs-mode-hook
+		rustic-cargo-run-mode-hook
+		rustic-cargo-test-mode-hook
+		shell-mode-hook
 		eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
@@ -107,7 +170,7 @@
   :init
   (progn
     (setq dashboard-center-content t)
-    (setq dashboard-banner-logo-title "Also try Vim.")
+    (setq dashboard-banner-logo-title " Also try Vim.")
     (setq dashboard-set-file-icons t)
     (setq dashboard-set-heading-icons t)
     (setq dashboard-set-footer nil)
@@ -118,8 +181,8 @@
 (setq dashboard-items '(
                         (recents  . 4)
                         (projects . 3)
-                        ;;(agenda . 5)
-                        (bookmarks . 3)
+                        (agenda . 5)
+                       ;;(bookmarks . 3)
                         )))
 
 ;; truncates lines
@@ -176,6 +239,9 @@
   :ensure t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
+
+;; Doom modeline icons for emacsclient
+(setq doom-modeline-icon t)
 
 ;; Set Emacs theme
 (use-package doom-themes
@@ -311,11 +377,15 @@
   (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
   (setq vterm-max-scrollback 10000))
 
-  ;; Fix broken prompt and completion prompts while running fish shell
+;; Fix broken prompt and completion prompts while running fish shell
 (with-eval-after-load 'vterm(add-hook 'term-exec-hook
           (function
            (lambda ()
              (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))))
+
+;; Better terminal colors
+(use-package eterm-256color
+  :hook (term-mode . eterm-256color-mode))
 
 ;; Enables lsp communcation
 (use-package lsp-mode
@@ -376,7 +446,20 @@
   :config
   (setq typescript-indent-level 2)
   (setq js-indent-level 2)
-  (add-hook 'js-mode-hook 'lsp))
+  (add-hook 'js-mode-hook 'lsp-deferred)
+  (add-hook 'typescript-mode-hook 'lsp-deferred))
+
+;; LSP mode for HTML
+(use-package mhtml-mode
+  :mode "\\.html\\'"
+  :config
+  (add-hook 'mhtml-mode-hook 'lsp))
+
+;; LSP mode for CSS
+(use-package css-mode
+  :mode "\\.css\\'"
+  :config
+  (add-hook 'css-mode-hook 'lsp))
 
 ;; LSP mode for C/C++
 (add-hook 'c-mode-hook 'lsp)
@@ -392,7 +475,7 @@
 ;; LSP mode for Rust
 (use-package rustic
   :ensure t
-  :hook (rustic-mode . lsp-deferred)
+  :hook (rustic-mode . lsp)
   :config
   (require 'lsp-rust)
   (setq lsp-rust-analyzer-completion-add-call-parenthesis t))
@@ -406,6 +489,192 @@
 (add-hook 'java-mode-hook 'lsp)
 
 ;; LSP mode for LaTex
+(add-hook 'LaTeX-mode-hook
+          (local-set-key (kbd "C-c C-. M-c") 'mm/latex-compile)
+          (local-set-key (kbd "C-c C-. M-v") 'mm/latex-compile-and-view)
+          (lambda () (local-unset-key (kbd "C-j"))))
 (setq TeX-auto-save t)
 (setq TeX-parse-self t) 
 (add-hook 'tex-mode-hook 'lsp)
+
+;; ORG mode configuration
+
+(defun efs/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(defun efs/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+(use-package org
+  :hook (org-mode . efs/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾")
+  (efs/org-font-setup))
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(defun efs/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . efs/org-mode-visual-fill))
+
+(setq org-agenda-start-with-log-mode t)
+(setq org-log-done 'time)
+(setq org-log-into-drawer t)
+
+(setq org-agenda-files
+      '("~/Org/Agenda/Birthdays.org"
+        "~/Org/Agenda/Tasks.org"))
+
+(require 'org-habit)
+(add-to-list 'org-modules 'org-habit)
+(setq org-habit-graph-column 60)
+
+(setq org-todo-keywords
+  '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+   (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+
+  ;; Configure custom agenda views
+  (setq org-agenda-custom-commands
+   '(("d" "Dashboard"
+     ((agenda "" ((org-deadline-warning-days 7)))
+      (todo "NEXT"
+        ((org-agenda-overriding-header "Next Tasks")))
+      (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+    ("n" "Next Tasks"
+     ((todo "NEXT"
+        ((org-agenda-overriding-header "Next Tasks")))))
+
+    ("W" "Work Tasks" tags-todo "+work-email")
+
+    ;; Low-effort next actions
+    ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+     ((org-agenda-overriding-header "Low Effort Tasks")
+      (org-agenda-max-todos 20)
+      (org-agenda-files org-agenda-files)))
+
+    ("w" "Workflow Status"
+     ((todo "WAIT"
+            ((org-agenda-overriding-header "Waiting on External")
+             (org-agenda-files org-agenda-files)))
+      (todo "REVIEW"
+            ((org-agenda-overriding-header "In Review")
+             (org-agenda-files org-agenda-files)))
+      (todo "PLAN"
+            ((org-agenda-overriding-header "In Planning")
+             (org-agenda-todo-list-sublevels nil)
+             (org-agenda-files org-agenda-files)))
+      (todo "BACKLOG"
+            ((org-agenda-overriding-header "Project Backlog")
+             (org-agenda-todo-list-sublevels nil)
+             (org-agenda-files org-agenda-files)))
+      (todo "READY"
+            ((org-agenda-overriding-header "Ready for Work")
+             (org-agenda-files org-agenda-files)))
+      (todo "ACTIVE"
+            ((org-agenda-overriding-header "Active Projects")
+             (org-agenda-files org-agenda-files)))
+      (todo "COMPLETED"
+            ((org-agenda-overriding-header "Completed Projects")
+             (org-agenda-files org-agenda-files)))
+      (todo "CANC"
+            ((org-agenda-overriding-header "Cancelled Projects")
+             (org-agenda-files org-agenda-files)))))))
+
+;; list tags
+(setq org-tag-alist
+  '((:startgroup)
+     ; Put mutually exclusive tags here
+     (:endgroup)
+     ("@errand" . ?E)
+     ("@home" . ?H)
+     ("@work" . ?W)
+     ("agenda" . ?a)
+     ("planning" . ?p)
+     ("publish" . ?P)
+     ("batch" . ?b)
+     ("note" . ?n)
+     ("idea" . ?i)))
+
+;; Moves done tasks to archive
+(setq org-refile-targets
+    '(("Archive.org" :maxlevel . 1)
+      ("Tasks.org" :maxlevel . 1)))
+
+;; Save Org buffers after refiling!
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+(setq org-capture-templates
+  `(("t" "Tasks / Projects")
+    ("tt" "Task" entry (file+olp "~/Org/Agenda/Tasks.org" "Inbox")
+         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+    ("j" "Journal Entries")
+    ("jj" "Journal" entry
+         (file+olp+datetree "~/Org/Agenda/Journal.org")
+         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+         :clock-in :clock-resume
+         :empty-lines 1)
+      
+    ("jm" "Meeting" entry
+         (file+olp+datetree "~/Org/Agenda/Journal.org")
+         "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+         :clock-in :clock-resume
+         :empty-lines 1)
+      
+    ("m" "Metrics Capture")
+    ("mw" "Weight" table-line (file+headline "~/Org/Agenda/Metrics.org" "Weight")
+     "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+(define-key global-map (kbd "C-c j")
+  (lambda () (interactive) (org-capture nil "jj")))
+
+(org-babel-do-load-languages
+  'org-babel-load-languages
+  '((emacs-lisp . t)
+    (python . t)))
+
+(push '("conf-unix" . conf-unix) org-src-lang-modes)
+
+;; ;; Automatically tangle our Emacs.org config file when we save it
+;; (defun efs/org-babel-tangle-config ()
+;;   (when (string-equal (buffer-file-name)
+;;                       (expand-file-name "~/Projects/Code/emacs-from-scratch/Emacs.org"))
+;;     ;; Dynamic scoping to the rescue
+;;     (let ((org-confirm-babel-evaluate nil))
+;;       (org-babel-tangle))))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
