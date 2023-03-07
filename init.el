@@ -1,7 +1,7 @@
 ;; MM Library
-(load-file "/home/sebas/.emacs.d/mm-elisp/mm-latex-mode.el")
-(load-file "/home/sebas/.emacs.d/mm-elisp/mm-windows.el")
-(load-file "/home/sebas/.emacs.d/mm-elisp/mm-utils.el")
+(load-file "/home/sebnow91/.emacs.d/mm-elisp/mm-latex-mode.el")
+(load-file "/home/sebnow91/.emacs.d/mm-elisp/mm-windows.el")
+(load-file "/home/sebnow91/.emacs.d/mm-elisp/mm-utils.el")
 
 (defvar my-default-font-size 120)
 
@@ -45,7 +45,6 @@
 (global-set-key (kbd "C-M-l") 'right-word)
 (global-set-key (kbd "C-m") 'back-to-indentation)
 (global-set-key (kbd "RET") 'newline)
-
 (global-set-key (kbd "C-c w") 'toggle-truncate-lines)
 
 (global-set-key (kbd "C-n") 'electric-newline-and-maybe-indent)
@@ -138,7 +137,7 @@
  '(custom-safe-themes
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
  '(package-selected-packages
-   '(eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
+   '(company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -309,11 +308,11 @@
 
 ;; Better file and buffer management
 (use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history)))
+  :bind(("M-x" . counsel-M-x)
+        ("C-x b" . counsel-ibuffer)
+        ("C-x C-f" . counsel-find-file)
+        :map minibuffer-local-map
+        ("C-r" . 'counsel-minibuffer-history)))
 
 ;; Better function and variable description
 (use-package helpful
@@ -678,3 +677,6 @@
 ;;       (org-babel-tangle))))
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+(with-eval-after-load (define-key c-mode-map (kbd "C-M-h") nil))
+(with-eval-after-load (define-key c++-mode-map (kbd "C-M-h") nil))
