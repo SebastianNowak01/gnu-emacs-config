@@ -1,7 +1,7 @@
 ;; MM Library
-(load-file "/home/sebnow91/.emacs.d/mm-elisp/mm-latex-mode.el")
-(load-file "/home/sebnow91/.emacs.d/mm-elisp/mm-windows.el")
-(load-file "/home/sebnow91/.emacs.d/mm-elisp/mm-utils.el")
+(load-file "/home/sebas/.emacs.d/mm-elisp/mm-latex-mode.el")
+(load-file "/home/sebas/.emacs.d/mm-elisp/mm-windows.el")
+(load-file "/home/sebas/.emacs.d/mm-elisp/mm-utils.el")
 
 (defvar my-default-font-size 120)
 
@@ -136,6 +136,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
+ '(org-agenda-files nil)
  '(package-selected-packages
    '(company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
 (custom-set-faces
@@ -282,7 +283,6 @@
   (use-package yasnippet-snippets
     :ensure t)
   (yas-reload-all))
-(yafolding-mode 1)
 
 ;; Better tex
 (use-package tex
@@ -465,6 +465,7 @@
 (setq-default c-basic-offset 4)
 (add-hook 'c++-mode-hook 'rebind)
 (add-hook 'c++-mode-hook 'lsp)
+(add-hook 'c++-mode-hook (lambda () (local-unset-key (kbd"C-M-h"))))
 (setq-default c++-basic-offset 4)
 
 (use-package clang-format
@@ -553,10 +554,6 @@
 (setq org-log-done 'time)
 (setq org-log-into-drawer t)
 
-(setq org-agenda-files
-      '("~/Org/Agenda/Birthdays.org"
-        "~/Org/Agenda/Tasks.org"))
-
 (require 'org-habit)
 (add-to-list 'org-modules 'org-habit)
 (setq org-habit-graph-column 60)
@@ -629,34 +626,9 @@
      ("idea" . ?i)))
 
 ;; Moves done tasks to archive
-(setq org-refile-targets
-    '(("Archive.org" :maxlevel . 1)
-      ("Tasks.org" :maxlevel . 1)))
 
 ;; Save Org buffers after refiling!
 (advice-add 'org-refile :after 'org-save-all-org-buffers)
-
-(setq org-capture-templates
-  `(("t" "Tasks / Projects")
-    ("tt" "Task" entry (file+olp "~/Org/Agenda/Tasks.org" "Inbox")
-         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-
-    ("j" "Journal Entries")
-    ("jj" "Journal" entry
-         (file+olp+datetree "~/Org/Agenda/Journal.org")
-         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-         :clock-in :clock-resume
-         :empty-lines 1)
-      
-    ("jm" "Meeting" entry
-         (file+olp+datetree "~/Org/Agenda/Journal.org")
-         "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-         :clock-in :clock-resume
-         :empty-lines 1)
-      
-    ("m" "Metrics Capture")
-    ("mw" "Weight" table-line (file+headline "~/Org/Agenda/Metrics.org" "Weight")
-     "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
 (define-key global-map (kbd "C-c j")
   (lambda () (interactive) (org-capture nil "jj")))
@@ -667,16 +639,4 @@
     (python . t)))
 
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
-
-;; ;; Automatically tangle our Emacs.org config file when we save it
-;; (defun efs/org-babel-tangle-config ()
-;;   (when (string-equal (buffer-file-name)
-;;                       (expand-file-name "~/Projects/Code/emacs-from-scratch/Emacs.org"))
-;;     ;; Dynamic scoping to the rescue
-;;     (let ((org-confirm-babel-evaluate nil))
-;;       (org-babel-tangle))))
-
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-
-(with-eval-after-load (define-key c-mode-map (kbd "C-M-h") nil))
-(with-eval-after-load (define-key c++-mode-map (kbd "C-M-h") nil))
