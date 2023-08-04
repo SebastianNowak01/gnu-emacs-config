@@ -1,0 +1,2 @@
+* GNU Emacs config
+My personal Emacs config. Main part of the config was written with help of David Wilson [[https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=2][Emacs From Scratch]] series. Some of the functions and keybinds were taken from [[https://gitlab.com/mmilek/emacs-config][mmilek]].
