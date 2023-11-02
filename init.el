@@ -138,7 +138,7 @@
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
  '(org-agenda-files nil)
  '(package-selected-packages
-   '(company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
+   '(emmet-mode web-mode rg ripgrep restclient-mode restclient company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -174,7 +174,7 @@
     (setq dashboard-set-file-icons t)
     (setq dashboard-set-heading-icons t)
     (setq dashboard-set-footer nil)
-    (setq dashboard-startup-banner "~/.emacs.d/xiao.png"))
+    (setq dashboard-startup-banner "~/.emacs.d/hatsumi.jpg"))
   :config
   (dashboard-setup-startup-hook)
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
@@ -438,15 +438,46 @@
   :hook (company-mode . company-box-mode))
 (setq company-box-doc-enable t)
 
+;; restclient and resclient mode for .http files
+(use-package restclient)
+(add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
+
 ;; LSP mode for Typescript and Javascript
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :mode "\\.js\\'"
-  :config
-  (setq typescript-indent-level 2)
-  (setq js-indent-level 2)
-  (add-hook 'js-mode-hook 'lsp-deferred)
-  (add-hook 'typescript-mode-hook 'lsp-deferred))
+;; (use-package typescript-mode
+;;   :mode "\\.ts\\'"
+;;   :mode "\\.js\\'"
+;;   :mode "\\.jsx\\'"
+;;   :config
+;;   (setq typescript-indent-level 2)
+;;   (setq js-indent-level 2)
+;;   (add-hook 'js-mode-hook 'lsp-deferred)
+;;   (add-hook 'typescript-mode-hook 'lsp-deferred)
+;;   (add-hook 'js-mode-hook 'prettier-js-mode)
+;;   (add-hook 'typescript-mode-hook 'prettier-js-mode))
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
+(setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+(defun web-mode-init-hook ()
+  "Hooks for Web mode.  Adjust indent."
+  (setq web-mode-cond-indent-offset 2)
+  (setq tab-width 2))
+
+(add-hook 'web-mode-hook  'web-mode-init-hook)
+
+(require 'flycheck)
+
+(setq-default flycheck-disabled-checkers
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint json-jsonlist)))
+
+;; Enable eslint checker for web-mode
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+;; Enable flycheck globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+(add-hook 'web-mode-hook 'lsp)
+(add-hook 'web-mode-hook 'prettier-js-mode)
 
 ;; LSP mode for HTML
 (use-package mhtml-mode
