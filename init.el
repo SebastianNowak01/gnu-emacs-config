@@ -455,12 +455,16 @@
 ;;   (add-hook 'js-mode-hook 'prettier-js-mode)
 ;;   (add-hook 'typescript-mode-hook 'prettier-js-mode))
 
-(require 'web-mode)
+(use-package web-mode
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2))
+
 (add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
 (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
 (defun web-mode-init-hook ()
   "Hooks for Web mode.  Adjust indent."
-  (setq web-mode-cond-indent-offset 2)
   (setq tab-width 2))
 
 (add-hook 'web-mode-hook  'web-mode-init-hook)
@@ -475,7 +479,6 @@
 (flycheck-add-mode 'javascript-eslint 'web-mode)
 ;; Enable flycheck globally
 (add-hook 'after-init-hook #'global-flycheck-mode)
-
 (add-hook 'web-mode-hook 'lsp)
 (add-hook 'web-mode-hook 'prettier-js-mode)
 
