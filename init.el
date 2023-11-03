@@ -270,7 +270,10 @@
 ;; Better tree sitter
 (use-package tree-sitter-langs
   :defer
-  :ensure t)
+  :ensure t
+  :config
+  (tree-sitter-require 'tsx)
+  (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
@@ -460,14 +463,23 @@
   (web-mode-markup-indent-offset 2)
   (web-mode-css-indent-offset 2)
   (web-mode-code-indent-offset 2))
+(setq typescript-indent-level 2)
+;; you can also use the DOOM one if you wish
+(define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+  "Major mode for editing TSX files.
 
+Refer to Typescript documentation for syntactic differences between normal and TSX
+variants of Typescript.")
+
+(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
+;; (add-to-list 'auto-mode-alist '("\\.tsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
 (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
-(defun web-mode-init-hook ()
-  "Hooks for Web mode.  Adjust indent."
-  (setq tab-width 2))
+(setq web-mode-content-types-alist '(("tsx" . "\\.ts[x]?\\'")))
+;; (defun web-mode-init-hook ()
+;;   "Hooks for Web mode.  Adjust indent.")
 
-(add-hook 'web-mode-hook  'web-mode-init-hook)
+;; (add-hook 'web-mode-hook  'web-mode-init-hook)
 
 (require 'flycheck)
 
@@ -477,6 +489,7 @@
 
 ;; Enable eslint checker for web-mode
 (flycheck-add-mode 'javascript-eslint 'web-mode)
+(flycheck-add-mode 'typescript-tslint 'web-mode)
 ;; Enable flycheck globally
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'web-mode-hook 'lsp)
