@@ -29,6 +29,9 @@
 ;; Set theme (init can fail so wombat can save eyes[dark mode])
 (load-theme 'wombat)
 
+;; Use spaces as indentation
+(indent-tabs-mode nil)
+
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; MM Elisp functions and keybinds
@@ -138,7 +141,7 @@
    '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
  '(org-agenda-files nil)
  '(package-selected-packages
-   '(emmet-mode web-mode rg ripgrep restclient-mode restclient company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
+   '(tsi quelpa-use-package quelpa command-log-mode emmet-mode web-mode rg ripgrep restclient-mode restclient company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -273,9 +276,10 @@
   :ensure t
   :config
   (tree-sitter-require 'tsx)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
   (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
-(global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
 
 ;; Snippets of code (all 3 need to be installed with package-install RET package-name RET)
 (use-package yasnippet
@@ -393,7 +397,7 @@
 (use-package lsp-mode
   :ensure t
   :commands (lsp lsp-deferred)
-  :hook (lsp-mode . efs/lsp-mode-setup)
+  ;;:hook (lsp-mode . efs/lsp-mode-setup)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
@@ -427,8 +431,9 @@
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
          ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
+        ;; (:map lsp-mode-map
+        ;;       ;;("<tab>" . company-indent-or-complete-common)
+	;;       )
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
@@ -445,18 +450,60 @@
 (use-package restclient)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
-;; LSP mode for Typescript and Javascript
-;; (use-package typescript-mode
-;;   :mode "\\.ts\\'"
-;;   :mode "\\.js\\'"
-;;   :mode "\\.jsx\\'"
-;;   :config
-;;   (setq typescript-indent-level 2)
-;;   (setq js-indent-level 2)
-;;   (add-hook 'js-mode-hook 'lsp-deferred)
-;;   (add-hook 'typescript-mode-hook 'lsp-deferred)
-;;   (add-hook 'js-mode-hook 'prettier-js-mode)
-;;   (add-hook 'typescript-mode-hook 'prettier-js-mode))
+(defun check-tsx ()
+  "Check if we should switch from typescript-mode to typescript-tsx-mode."
+  (when (not (eq major-mode 'typescript-tsx-mode))
+    (when (string-match "\\.tsx\\'" (buffer-file-name (current-buffer)))
+	(progn
+	  (typescript-tsx-mode)
+	  (message "Toggling TSX mode")))))
+
+;;LSP mode for Typescript and Javascript
+(use-package typescript-mode
+  ;;:mode "\\.ts\\'"
+  :mode "\\.js\\'"
+  :mode "\\.jsx\\'"
+  :config
+  
+  (define-derived-mode typescript-tsx-mode typescript-mode
+    "TSX")
+
+  (message (format "%s" (remove '("\\.tsx?\\'" . typescript-mode) auto-mode-alist)))
+  (delete '("\\.tsx?\\'" . typescript-mode) auto-mode-alist)
+  
+    ;; use our derived mode for tsx files
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
+  ;; by default, typescript-mode is mapped to the treesitter typescript parser
+  ;; use our derived mode to map both .tsx AND .ts -> typescript-tsx-mode -> treesitter tsx
+  (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx))
+
+  (setq typescript-indent-level 2)
+  (setq js-indent-level 2)
+  (add-hook 'js-mode-hook 'lsp-deferred)
+  (add-hook 'typescript-mode-hook 'lsp-deferred)
+  (add-hook 'typescript-mode-hook (lambda () (message "CALLING TS HOOK")))
+  (add-hook 'typescript-mode-hook 'check-tsx)
+  (add-hook 'typescript-tsx-mode-hook (lambda () (message "CALLING TSX HOOK")))
+  (add-hook 'js-mode-hook 'prettier-js-mode)
+  (add-hook 'typescript-mode-hook 'prettier-js-mode))
+
+(use-package quelpa
+  :ensure t
+  :config
+  (use-package quelpa-use-package
+    :ensure t))
+
+(use-package tsi
+  :after tree-sitter
+  :quelpa (tsi :fetcher github :repo "orzechowskid/tsi.el")
+  ;; define autoload definitions which when actually invoked will cause package to be loaded
+  :commands (tsi-typescript-mode tsi-json-mode tsi-css-mode)
+  :init
+  (add-hook 'typescript-mode-hook (lambda () (tsi-typescript-mode 1)))
+  (add-hook 'json-mode-hook (lambda () (tsi-json-mode 1)))
+  (add-hook 'css-mode-hook (lambda () (tsi-css-mode 1)))
+  (add-hook 'scss-mode-hook (lambda () (tsi-scss-mode 1))))
+
 
 (use-package web-mode
   :custom
@@ -464,22 +511,13 @@
   (web-mode-css-indent-offset 2)
   (web-mode-code-indent-offset 2))
 (setq typescript-indent-level 2)
-;; you can also use the DOOM one if you wish
-(define-derived-mode typescript-tsx-mode typescript-mode "TSX"
-  "Major mode for editing TSX files.
 
-Refer to Typescript documentation for syntactic differences between normal and TSX
-variants of Typescript.")
-
-(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
-;; (add-to-list 'auto-mode-alist '("\\.tsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
 (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
-(setq web-mode-content-types-alist '(("tsx" . "\\.ts[x]?\\'")))
-;; (defun web-mode-init-hook ()
-;;   "Hooks for Web mode.  Adjust indent.")
+(defun web-mode-init-hook ()
+  "Hooks for Web mode.  Adjust indent.")
 
-;; (add-hook 'web-mode-hook  'web-mode-init-hook)
+(add-hook 'web-mode-hook 'web-mode-init-hook)
 
 (require 'flycheck)
 
