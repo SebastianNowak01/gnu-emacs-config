@@ -1,3 +1,5 @@
+(setq gc-cons-threshold 100000000)
+(let ((file-name-handler-alist nil))
 ;; MM Library
 (load-file "/home/sebas/.emacs.d/mm-elisp/mm-latex-mode.el")
 (load-file "/home/sebas/.emacs.d/mm-elisp/mm-windows.el")
@@ -690,3 +692,5 @@
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
 (put 'downcase-region 'disabled nil)
+)
+(setq gc-cons-threshold 800000)
