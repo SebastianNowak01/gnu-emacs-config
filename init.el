@@ -10,7 +10,6 @@
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
-(set-fringe-mode 10)        ; Give some breathing room
 
 (menu-bar-mode -1)            ; Disable the menu bar
 
@@ -26,13 +25,13 @@
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 295 :weight 'regular)
 
-;; Set theme (init can fail so wombat can save eyes[dark mode])
-(load-theme 'wombat)
-
 ;; Use spaces as indentation
 (indent-tabs-mode nil)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;; Subword mode help with different nameing convenctions (camelCase, snake_case)
+(global-subword-mode 1)
 
 ;; MM Elisp functions and keybinds
 (global-set-key (kbd "C-h") 'backward-char)
@@ -138,10 +137,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
+   '("8d3ef5ff6273f2a552152c7febc40eabca26bae05bd12bc85062e2dc224cde9a" "e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
  '(org-agenda-files nil)
  '(package-selected-packages
-   '(tsi quelpa-use-package quelpa command-log-mode emmet-mode web-mode rg ripgrep restclient-mode restclient company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
+   '(prettier prettier-js yasnippet-classic-snippets dap-mode ivy-yasnippet js-react-redux-yasnippets dap-node tsi quelpa-use-package quelpa command-log-mode emmet-mode rg ripgrep restclient-mode restclient company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -194,8 +193,6 @@
 ;; you can delete the selected text just by hitting the Backspace key ( 'DEL' )
 (delete-selection-mode 1)
 
-(setq global-subword-mode t)
-
 ;; Searching through file made easier
 (use-package ivy
   :diminish
@@ -230,7 +227,7 @@
 (use-package all-the-icons)
 
 ;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
-(require 'multiple-cursors)
+(use-package multiple-cursors)
 
 ;; Shows where cursor is
 (use-package beacon
@@ -248,7 +245,7 @@
 
 ;; Set Emacs theme
 (use-package doom-themes
-  :init (load-theme 'doom-gruvbox))
+  :init (load-theme 'doom-moonlight))
 
 ;; Colorful parentheses when programming
 (use-package rainbow-delimiters
@@ -279,7 +276,6 @@
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
   (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
-
 
 ;; Snippets of code (all 3 need to be installed with package-install RET package-name RET)
 (use-package yasnippet
@@ -397,6 +393,7 @@
 (use-package lsp-mode
   :ensure t
   :commands (lsp lsp-deferred)
+  :hook (lsp-mode . tree-sitter-mode)
   ;;:hook (lsp-mode . efs/lsp-mode-setup)
   :init
   (setq lsp-keymap-prefix "C-c l")
@@ -425,15 +422,22 @@
 (setq read-process-output-max (*(* 1024 1024) 3)) ;; 3Mib
 (setq lsp-headerline-breadcrumb-enable nil)
 
+(setq-default flycheck-disabled-checkers
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint json-jsonlist)))
+
+;; Enable flycheck globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
 ;; Completions and how to make them pretty
 (use-package company
   :after lsp-mode
   :hook (lsp-mode . company-mode)
   :bind (:map company-active-map
          ("<tab>" . company-complete-selection))
-        ;; (:map lsp-mode-map
-        ;;       ;;("<tab>" . company-indent-or-complete-common)
-	;;       )
+        (:map lsp-mode-map
+              ("<tab>" . company-indent-or-complete-common)
+	      )
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
@@ -453,38 +457,32 @@
 (defun check-tsx ()
   "Check if we should switch from typescript-mode to typescript-tsx-mode."
   (when (not (eq major-mode 'typescript-tsx-mode))
-    (when (string-match "\\.tsx\\'" (buffer-file-name (current-buffer)))
+    (when (string-match "\\.[jt]sx\\'" (buffer-file-name (current-buffer)))
 	(progn
 	  (typescript-tsx-mode)
 	  (message "Toggling TSX mode")))))
 
-;;LSP mode for Typescript and Javascript
+(use-package dap-mode)
+
+;;LSP mode for Typescript
 (use-package typescript-mode
-  ;;:mode "\\.ts\\'"
-  :mode "\\.js\\'"
-  :mode "\\.jsx\\'"
+  :mode "\\.[jt]sx?\\'"
+  :mode "\\.cjs\\'"
   :config
   
-  (define-derived-mode typescript-tsx-mode typescript-mode
-    "TSX")
+  (define-derived-mode typescript-tsx-mode typescript-mode "TSX")
 
-  (message (format "%s" (remove '("\\.tsx?\\'" . typescript-mode) auto-mode-alist)))
-  (delete '("\\.tsx?\\'" . typescript-mode) auto-mode-alist)
-  
-    ;; use our derived mode for tsx files
+  ;; use our derived mode for tsx files
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . typescript-tsx-mode))
+  
   ;; by default, typescript-mode is mapped to the treesitter typescript parser
   ;; use our derived mode to map both .tsx AND .ts -> typescript-tsx-mode -> treesitter tsx
   (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx))
 
   (setq typescript-indent-level 2)
-  (setq js-indent-level 2)
-  (add-hook 'js-mode-hook 'lsp-deferred)
   (add-hook 'typescript-mode-hook 'lsp-deferred)
-  (add-hook 'typescript-mode-hook (lambda () (message "CALLING TS HOOK")))
   (add-hook 'typescript-mode-hook 'check-tsx)
-  (add-hook 'typescript-tsx-mode-hook (lambda () (message "CALLING TSX HOOK")))
-  (add-hook 'js-mode-hook 'prettier-js-mode)
   (add-hook 'typescript-mode-hook 'prettier-js-mode))
 
 (use-package quelpa
@@ -495,7 +493,7 @@
 
 (use-package tsi
   :after tree-sitter
-  :quelpa (tsi :fetcher github :repo "orzechowskid/tsi.el")
+  ;; :quelpa (tsi :fetcher github :repo "orzechowskid/tsi.el")
   ;; define autoload definitions which when actually invoked will cause package to be loaded
   :commands (tsi-typescript-mode tsi-json-mode tsi-css-mode)
   :init
@@ -505,34 +503,6 @@
   (add-hook 'scss-mode-hook (lambda () (tsi-scss-mode 1))))
 
 
-(use-package web-mode
-  :custom
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2))
-(setq typescript-indent-level 2)
-
-(add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
-(setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
-(defun web-mode-init-hook ()
-  "Hooks for Web mode.  Adjust indent.")
-
-(add-hook 'web-mode-hook 'web-mode-init-hook)
-
-(require 'flycheck)
-
-(setq-default flycheck-disabled-checkers
-              (append flycheck-disabled-checkers
-                      '(javascript-jshint json-jsonlist)))
-
-;; Enable eslint checker for web-mode
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-(flycheck-add-mode 'typescript-tslint 'web-mode)
-;; Enable flycheck globally
-(add-hook 'after-init-hook #'global-flycheck-mode)
-(add-hook 'web-mode-hook 'lsp)
-(add-hook 'web-mode-hook 'prettier-js-mode)
-
 ;; LSP mode for HTML
 (use-package mhtml-mode
   :mode "\\.html\\'"
@@ -541,7 +511,7 @@
 
 ;; LSP mode for CSS
 (use-package css-mode
-  :mode "\\.css\\'"
+  :mode "\\..?css\\'"
   :config
   (add-hook 'css-mode-hook 'lsp))
 
@@ -568,22 +538,16 @@
 ;; LSP mode for Emacs
 (add-hook 'emacs-lisp-mode-hook 'company-mode)
 
-;; LSP mode for Java
-(use-package lsp-java
-  :hook java-mode-hook)
-(add-hook 'java-mode-hook 'lsp)
-
 ;; LSP mode for LaTex
 (add-hook 'LaTeX-mode-hook
           (local-set-key (kbd "C-c C-. M-c") 'mm/latex-compile)
           (local-set-key (kbd "C-c C-. M-v") 'mm/latex-compile-and-view)
           (lambda () (local-unset-key (kbd "C-j"))))
 (setq TeX-auto-save t)
-(setq TeX-parse-self t) 
+(setq TeX-parse-self t)
 (add-hook 'tex-mode-hook 'lsp)
 
 ;; ORG mode configuration
-
 (defun efs/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
@@ -628,7 +592,7 @@
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 (defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
+  (setq visual-fill-column-width 50
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
@@ -725,3 +689,4 @@
 
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+(put 'downcase-region 'disabled nil)
