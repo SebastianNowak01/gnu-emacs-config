@@ -1,23 +1,19 @@
 (setq gc-cons-threshold 100000000)
 (let ((file-name-handler-alist nil))
+
+(setq inhibit-startup-message t)
+(scroll-bar-mode -1)        ; Disable visible scrollbar
+(tool-bar-mode -1)          ; Disable the toolbar
+(tooltip-mode -1)           ; Disable tooltips
+(menu-bar-mode -1)          ; Disable the menu bar
+(setq visible-bell t)       ; Set up the visible bell
+
 ;; MM Library
 (load-file "/home/sebas/.emacs.d/mm-elisp/mm-latex-mode.el")
 (load-file "/home/sebas/.emacs.d/mm-elisp/mm-windows.el")
 (load-file "/home/sebas/.emacs.d/mm-elisp/mm-utils.el")
 
 (defvar my-default-font-size 120)
-
-(setq inhibit-startup-message t)
-
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
-
-(menu-bar-mode -1)            ; Disable the menu bar
-
-;; Set up the visible bell
-(setq visible-bell t)
-
 ;; Set font and it's size
 (set-face-attribute 'default nil :font "Fira Code Retina" :height my-default-font-size)
 
@@ -27,15 +23,8 @@
 ;; Set the variable pitch face
 (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 295 :weight 'regular)
 
-;; Use spaces as indentation
-(indent-tabs-mode nil)
-
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; Subword mode help with different nameing convenctions (camelCase, snake_case)
-(global-subword-mode 1)
-
 ;; MM Elisp functions and keybinds
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (global-set-key (kbd "C-h") 'backward-char)
 (global-unset-key (kbd "C-j"))
 (global-set-key (kbd "C-j") 'next-line)
@@ -110,14 +99,6 @@
 (global-set-key (kbd "C-M-s") 'mm/save-point)
 (global-set-key (kbd "C-`") 'mm/toggle-vterm-below)
 
-
-;; Auto close (), "", {}
-(electric-pair-mode 1)
-(setq electric-pair-pairs
-      '(
-        (?\" . ?\")
-        (?\{ . ?\})))
-
 ;; Initialize package sources
 (require 'package)
 
@@ -131,42 +112,6 @@
 
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-;; These variables are responsible for doom theme
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("8d3ef5ff6273f2a552152c7febc40eabca26bae05bd12bc85062e2dc224cde9a" "e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" default))
- '(org-agenda-files nil)
- '(package-selected-packages
-   '(prettier prettier-js yasnippet-classic-snippets dap-mode ivy-yasnippet js-react-redux-yasnippets dap-node tsi quelpa-use-package quelpa command-log-mode emmet-mode rg ripgrep restclient-mode restclient company vterm all-the-icons-dired pdf-tools auctex eterm-256color visual-fill-column org-bullets yafolding yasnippet-snippets yasnippet lsp-java rustic clang-format tree-sitter-langs tree-sitter goto-line-preview move-dup dired-single flycheck lsp-ivy lsp-treemacs lsp-ui company-box typescript-mode dashboard lsp-mode magit counsel-projectile projectile all-the-icons helpful ivy-rich which-key rainbow-delimiters doom-themes counsel doom-modeline ivy use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-;; Refresh a file edited outside of emacs
-(global-auto-revert-mode 1)
-
-;; Enabling column numbers
-(column-number-mode)
-(global-display-line-numbers-mode t)
-
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-		vterm-mode-hook
-                treemacs-mode-hook
-		rustic-cargo-run-mode-hook
-		rustic-cargo-test-mode-hook
-		shell-mode-hook
-		eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Entry screen
 (use-package dashboard
@@ -188,12 +133,6 @@
                         (agenda . 5)
                        ;;(bookmarks . 3)
                         )))
-
-;; truncates lines
-(setq-default truncate-lines t)
-
-;; you can delete the selected text just by hitting the Backspace key ( 'DEL' )
-(delete-selection-mode 1)
 
 ;; Searching through file made easier
 (use-package ivy
@@ -220,50 +159,27 @@
 ;; No parent and current directory will be shown in dired buffer
 (setq ivy-extra-directories nil)
 
-;; NOTE: The first time you load your configuration on a new machine, you'll
-;; need to run the following command interactively so that mode line icons
-;; display correctly:
-;;
-;; M-x all-the-icons-install-fonts
-
-(use-package all-the-icons)
-
-;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
-(use-package multiple-cursors)
-
-;; Shows where cursor is
-(use-package beacon
-  :ensure t)
-(beacon-mode 1)
-
-;; Bar at the bottom showing major and minor mode
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
-
-;; Doom modeline icons for emacsclient
-(setq doom-modeline-icon t)
-
-;; Set Emacs theme
-(use-package doom-themes
-  :init (load-theme 'doom-moonlight))
-
-;; Colorful parentheses when programming
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-;; Shortcut help
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 1))
-
 ;; Better ivy
 (use-package ivy-rich
   :init
   (ivy-rich-mode 1))
+
+;; Bar at the bottom showing major and minor mode
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+
+  ;; Doom modeline icons for emacsclient
+  (setq doom-modeline-icon t)
+
+  ;; Set Emacs theme
+(use-package doom-themes
+    :ensure t)
+(setq doom-themes-enable-bold t)
+(setq doom-themes-enable-italic t)
+
+(load-theme 'doom-moonlight t)
 
 ;; Better syntax highlighting
 (use-package tree-sitter
@@ -288,28 +204,6 @@
   (use-package yasnippet-snippets
     :ensure t)
   (yas-reload-all))
-
-;; Better tex
-(use-package tex
-  :ensure auctex
-  :defer)
-
-;; Better pdf
-(use-package pdf-tools
-  :defer
-  :ensure t)
-
-;; Single buffer for dired
-(use-package dired-single
-  :ensure t)
-
-;; Alt + arrows for Emacs
-(use-package move-dup
-  :ensure t)
-
-;; Jump to desired line
-(use-package goto-line-preview
-  :ensure t)
 
 ;; Better file and buffer management
 (use-package counsel
@@ -343,6 +237,10 @@
     (setq projectile-project-search-path '("~/Projects")))
   (setq projectile-switch-project-action #'projectile-dired))
 
+;; Better projectile mode
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+
 ;; Better Dired
 (use-package dired
   :ensure nil
@@ -355,81 +253,9 @@
 
 (setf dired-kill-when-opening-new-dired-buffer t)
 
-;; Better projectile mode
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
-
-;; Git porcelain
-(use-package magit
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
-;; Backup stored in backup folder
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-  backup-by-copying t    ; Don't delink hardlinks
-  version-control t      ; Use version numbers on backups
-  delete-old-versions t  ; Automatically delete excess backups
-  kept-new-versions 20   ; how many of the newest versions to keep
-  kept-old-versions 5    ; and how many of the old
-  )
-
-;; Terminal emulator in Emacs
-(use-package vterm
-  :ensure t
-  :commands vterm
-  :config
-  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
-  (setq vterm-max-scrollback 10000))
-
-;; Fix broken prompt and completion prompts while running fish shell
-(with-eval-after-load 'vterm(add-hook 'term-exec-hook
-          (function
-           (lambda ()
-             (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))))
-
-;; Better terminal colors
-(use-package eterm-256color
-  :hook (term-mode . eterm-256color-mode))
-
-;; Enables lsp communcation
-(use-package lsp-mode
-  :ensure t
-  :commands (lsp lsp-deferred)
-  :hook (lsp-mode . tree-sitter-mode)
-  ;;:hook (lsp-mode . efs/lsp-mode-setup)
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :config
-  (lsp-enable-which-key-integration t))
-
-;; Helpful ui lsp tweaks
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
-
-;; Treemacs
-(use-package lsp-treemacs
-  :after lsp)
-(treemacs-project-follow-mode t)
-
-(use-package lsp-ivy)
-
-;; Syntax checking
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
-;; Increase the amount of data which Emacs reads from the process.
-;; Default value is causing a slowdown, it's too low to handle server responses.
-(setq read-process-output-max (*(* 1024 1024) 3)) ;; 3Mib
-(setq lsp-headerline-breadcrumb-enable nil)
-
-(setq-default flycheck-disabled-checkers
-              (append flycheck-disabled-checkers
-                      '(javascript-jshint json-jsonlist)))
-
-;; Enable flycheck globally
-(add-hook 'after-init-hook #'global-flycheck-mode)
+;; Single buffer for dired
+(use-package dired-single
+  :ensure t)
 
 ;; Completions and how to make them pretty
 (use-package company
@@ -452,7 +278,69 @@
   :hook (company-mode . company-box-mode))
 (setq company-box-doc-enable t)
 
-;; restclient and resclient mode for .http files
+;; Git porcelain
+(use-package magit
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;; Terminal emulator in Emacs
+(use-package vterm
+  :ensure t
+  :commands vterm
+  :config
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
+  (setq vterm-max-scrollback 10000))
+
+;; Fix broken prompt and completion prompts while running fish shell
+(with-eval-after-load 'vterm(add-hook 'term-exec-hook
+          (function
+           (lambda ()
+             (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))))
+
+;; Better terminal colors
+(use-package eterm-256color
+  :hook (term-mode . eterm-256color-mode))
+
+;; Syntax checking
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+;; Increase the amount of data which Emacs reads from the process.
+;; Default value is causing a slowdown, it's too low to handle server responses.
+(setq read-process-output-max (*(* 1024 1024) 3)) ;; 3Mib
+(setq lsp-headerline-breadcrumb-enable nil)
+
+(setq-default flycheck-disabled-checkers
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint json-jsonlist)))
+
+;; Enable flycheck globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; Enables lsp communcation
+  (use-package lsp-mode
+    :ensure t
+    :commands (lsp lsp-deferred)
+    :hook (lsp-mode . tree-sitter-mode)
+    ;;:hook (lsp-mode . efs/lsp-mode-setup)
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    :config
+    (lsp-enable-which-key-integration t))
+
+  ;; Helpful ui lsp tweaks
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom))
+
+  ;; Treemacs
+  (use-package lsp-treemacs
+    :after lsp)
+  (treemacs-project-follow-mode t)
+
+  (use-package lsp-ivy)
+  ;; restclient and resclient mode for .http files
 (use-package restclient)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
@@ -463,8 +351,6 @@
 	(progn
 	  (typescript-tsx-mode)
 	  (message "Toggling TSX mode")))))
-
-(use-package dap-mode)
 
 ;;LSP mode for Typescript
 (use-package typescript-mode
@@ -503,7 +389,6 @@
   (add-hook 'json-mode-hook (lambda () (tsi-json-mode 1)))
   (add-hook 'css-mode-hook (lambda () (tsi-css-mode 1)))
   (add-hook 'scss-mode-hook (lambda () (tsi-scss-mode 1))))
-
 
 ;; LSP mode for HTML
 (use-package mhtml-mode
@@ -594,7 +479,7 @@
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 (defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 50
+  (setq visual-fill-column-width 100
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
@@ -690,7 +575,100 @@
     (python . t)))
 
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-(put 'downcase-region 'disabled nil)
+
+;; Use spaces as indentation
+  (indent-tabs-mode nil)
+
+  ;; Subword mode help with different nameing convenctions (camelCase, snake_case)
+  (global-subword-mode 1)
+
+  ;; Auto close (), "", {}
+  (electric-pair-mode 1)
+  (setq electric-pair-pairs
+        '(
+          (?\" . ?\")
+          (?\{ . ?\})))
+
+  ;; Refresh a file edited outside of emacs
+  (global-auto-revert-mode 1)
+
+  ;; Enabling column numbers
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  vterm-mode-hook
+                  treemacs-mode-hook
+                  rustic-cargo-run-mode-hook
+                  rustic-cargo-test-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
+  ;; Colorful parentheses when programming
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  ;; truncates lines
+  (setq-default truncate-lines t)
+
+  ;; you can delete the selected text just by hitting the Backspace key ( 'DEL' )
+  (delete-selection-mode 1)
+
+  ;; NOTE: The first time you load your configuration on a new machine, you'll
+  ;; need to run the following command interactively so that mode line icons
+  ;; display correctly:
+  ;;
+  ;; M-x all-the-icons-install-fonts
+
+  (use-package all-the-icons)
+
+  ;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
+  (use-package multiple-cursors)
+
+  ;; Shows where cursor is
+  (use-package beacon
+    :ensure t)
+  (beacon-mode 1)
+
+  ;; Better tex
+  (use-package tex
+    :ensure auctex
+    :defer)
+
+  ;; Better pdf
+  (use-package pdf-tools
+    :defer
+    :ensure t)
+
+  ;; Shortcut help
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 1))
+
+  ;; Alt + arrows for Emacs
+  (use-package move-dup
+    :ensure t)
+
+  ;; Jump to desired line
+  (use-package goto-line-preview
+    :ensure t)
+
+  (put 'downcase-region 'disabled nil)
+  
+;; Backup stored in backup folder
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+  backup-by-copying t    ; Don't delink hardlinks
+  version-control t      ; Use version numbers on backups
+  delete-old-versions t  ; Automatically delete excess backups
+  kept-new-versions 20   ; how many of the newest versions to keep
+  kept-old-versions 5    ; and how many of the old
+  )
+
 )
 (setq gc-cons-threshold 800000)
