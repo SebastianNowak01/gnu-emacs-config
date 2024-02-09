@@ -39,81 +39,84 @@ Taken from my mmilek.
 * Keybinds
 Keybinds mostly inspired by mmilek.
 #+BEGIN_SRC elisp
-;; MM Elisp functions and keybinds
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(global-set-key (kbd "C-h") 'backward-char)
-(global-unset-key (kbd "C-j"))
-(global-set-key (kbd "C-j") 'next-line)
-(global-set-key (kbd "C-k") 'previous-line)
-(global-set-key (kbd "C-l") 'forward-char)
-(global-set-key (kbd "C-M-h") 'left-word)
-(global-unset-key (kbd "C-M-j"))
-(global-set-key (kbd "C-M-j") nil)
-(global-set-key (kbd "C-M-j") (lambda () (interactive) (next-line 4)))
-(global-set-key (kbd "C-M-k") (lambda () (interactive) (previous-line 4)))
-(global-set-key (kbd "C-M-l") 'right-word)
-(global-set-key (kbd "C-m") 'back-to-indentation)
-(global-set-key (kbd "RET") 'newline)
-(global-set-key (kbd "C-c w") 'toggle-truncate-lines)
+  ;; MM Elisp functions and keybinds
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  (global-set-key (kbd "C-h") 'backward-char)
+  (global-unset-key (kbd "C-j"))
+  (global-set-key (kbd "C-j") 'next-line)
+  (global-set-key (kbd "C-k") 'previous-line)
+  (global-set-key (kbd "C-l") 'forward-char)
+  (global-set-key (kbd "C-M-h") 'left-word)
+  (global-unset-key (kbd "C-M-j"))
+  (global-set-key (kbd "C-M-j") nil)
+  (global-set-key (kbd "C-M-j") (lambda () (interactive) (next-line 4)))
+  (global-set-key (kbd "C-M-k") (lambda () (interactive) (previous-line 4)))
+  (global-set-key (kbd "C-M-l") 'right-word)
+  (global-set-key (kbd "C-m") 'back-to-indentation)
+  (global-set-key (kbd "RET") 'newline)
+  (global-set-key (kbd "C-c w") 'toggle-truncate-lines)
 
-(global-set-key (kbd "C-n") 'electric-newline-and-maybe-indent)
-(global-set-key (kbd "C-f") 'kill-line)
-(global-set-key (kbd "C-p") 'help-command)
-(global-set-key (kbd "C-b") 'recenter-top-bottom)
-(global-set-key (kbd "C-M-o") 'counsel-switch-buffer)
+  (global-set-key (kbd "C-n") 'electric-newline-and-maybe-indent)
+  (global-set-key (kbd "C-f") 'kill-line)
+  (global-set-key (kbd "C-p") 'help-command)
+  (global-set-key (kbd "C-b") 'recenter-top-bottom)
+  (global-set-key (kbd "C-M-o") 'counsel-switch-buffer)
 
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "<f2> j") 'counsel-set-variable)
-(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
-(global-set-key (kbd "C-c v") 'ivy-push-view)
-(global-set-key (kbd "C-c V") 'ivy-pop-view)
-(global-set-key (kbd "C-c c") 'counsel-compile)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c L") 'counsel-git-log)
-(global-set-key (kbd "C-c k") 'counsel-rg)
-(global-set-key (kbd "C-c m") 'counsel-linux-app)
-(global-set-key (kbd "C-c f") 'counsel-fzf)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-c J") 'counsel-file-jump)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "C-c b") 'counsel-bookmark)
-(global-set-key (kbd "C-c d") 'counsel-descbinds)
-(global-set-key (kbd "C-c o") 'counsel-outline)
-(global-set-key (kbd "C-c t") 'counsel-load-theme)
-(global-set-key (kbd "C-c F") 'counsel-org-file)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "M-y") 'counsel-yank-pop)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "<f2> j") 'counsel-set-variable)
+  (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+  (global-set-key (kbd "C-c v") 'ivy-push-view)
+  (global-set-key (kbd "C-c V") 'ivy-pop-view)
+  (global-set-key (kbd "C-c c") 'counsel-compile)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  (global-set-key (kbd "C-c L") 'counsel-git-log)
+  (global-set-key (kbd "C-c k") 'counsel-rg)
+  (global-set-key (kbd "C-c m") 'counsel-linux-app)
+  (global-set-key (kbd "C-c f") 'counsel-fzf)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (global-set-key (kbd "C-c J") 'counsel-file-jump)
+  (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "C-c b") 'counsel-bookmark)
+  (global-set-key (kbd "C-c d") 'counsel-descbinds)
+  (global-set-key (kbd "C-c o") 'counsel-outline)
+  (global-set-key (kbd "C-c t") 'counsel-load-theme)
+  (global-set-key (kbd "C-c F") 'counsel-org-file)
 
-(global-set-key (kbd "C-x K") 'mm/kill-everything)
+  (global-set-key (kbd "C-x K") 'mm/kill-everything)
 
-(global-set-key (kbd "C-t") 'goto-line-preview)
+  (global-set-key (kbd "C-t") 'goto-line-preview)
 
-(global-set-key (kbd "M-<up>") 'move-dup-move-lines-up)
-(global-set-key (kbd "M-<down>") 'move-dup-move-lines-down)
-(global-set-key (kbd "C-M-<up>") 'move-dup-duplicate-up)
-(global-set-key (kbd "C-M-<down>") 'move-dup-duplicate-down)
+  (global-set-key (kbd "M-<up>") 'move-dup-move-lines-up)
+  (global-set-key (kbd "M-<down>") 'move-dup-move-lines-down)
+  (global-set-key (kbd "C-M-<up>") 'move-dup-duplicate-up)
+  (global-set-key (kbd "C-M-<down>") 'move-dup-duplicate-down)
 
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C-.") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-,") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-,") 'mc/mark-all-like-this)
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C-.") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-,") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-,") 'mc/mark-all-like-this)
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-(global-set-key (kbd "M-RET") 'mm/split-window-horizontally-and-focus-vterm)
-(global-set-key (kbd "C-x 2") 'mm/split-window-vertically-and-focus)
-(global-set-key (kbd "C-x 3") 'mm/split-window-horizontally-and-focus)
-(global-set-key (kbd "C-r") 'mm/go-to-saved-point)
-(global-set-key (kbd "C-s") (lambda () (interactive) (mm/save-point-and-fn 'swiper)))
-(global-set-key (kbd "C-M-s") 'mm/save-point)
-(global-set-key (kbd "C-`") 'mm/toggle-vterm-below)
+  (global-set-key (kbd "M-RET") 'mm/split-window-horizontally-and-focus-vterm)
+  (global-set-key (kbd "C-x 2") 'mm/split-window-vertically-and-focus)
+  (global-set-key (kbd "C-x 3") 'mm/split-window-horizontally-and-focus)
+  (global-set-key (kbd "C-r") 'mm/go-to-saved-point)
+  (global-set-key (kbd "C-s") (lambda () (interactive) (mm/save-point-and-fn 'swiper)))
+  (global-set-key (kbd "C-M-s") 'mm/save-point)
+  (global-set-key (kbd "C-`") 'mm/toggle-vterm-below)
+
+  ;; My personal keybind
+  (global-set-key (kbd "C-x C-x") 'yas-expand)
 #+END_SRC
 * Package manager
 #+BEGIN_SRC elisp
@@ -225,15 +228,17 @@ Keybinds mostly inspired by mmilek.
 #+END_SRC
 * Yasnippet
 #+BEGIN_SRC elisp
-;; Snippets of code (all 3 need to be installed with package-install RET package-name RET)
-(use-package yasnippet
-  :ensure t
-  :defer
-  :config
-  (yas-global-mode)
-  (use-package yasnippet-snippets
-    :ensure t)
-  (yas-reload-all))
+    ;; Snippets of code (all 3 need to be installed with package-install RET package-name RET)
+    (use-package yasnippet
+      :ensure t
+      :defer
+      :config
+      (yas-global-mode)
+      (use-package yasnippet-snippets
+        :ensure t)
+      (yas-reload-all))
+  (auto-insert-mode t)
+  (use-package yatemplate)
 #+END_SRC
 * Counsel
 #+BEGIN_SRC elisp
