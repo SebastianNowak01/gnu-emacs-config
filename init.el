@@ -272,7 +272,7 @@
          ("<tab>" . company-complete-selection))
         (:map lsp-mode-map
               ("<tab>" . company-indent-or-complete-common)
-	      )
+              )
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
@@ -338,6 +338,9 @@
   (add-to-list 'emmet-jsx-major-modes 'jtsx-jsx-mode)
   (add-to-list 'emmet-jsx-major-modes 'jtsx-tsx-mode))
 
+(with-eval-after-load "emmet-mode"
+  (define-key emmet-mode-keymap (kbd "C-j") nil))
+
 ;; Enables lsp communcation
     (use-package lsp-mode
       :ensure t
@@ -371,7 +374,6 @@
     (add-hook 'typescript-mode-hook 'lsp-deferred)
     (add-hook 'typescript-mode-hook 'check-tsx)
     (add-hook 'typescript-mode-hook 'prettier-js-mode))
-
 
 ;; requires emmet mode to work correctly
 (use-package jtsx
@@ -408,7 +410,7 @@
     (define-key mode-map (kbd "C-c j w") 'jtsx-wrap-in-jsx-element)
     (define-key mode-map (kbd "C-c j u") 'jtsx-unwrap-jsx)
     (define-key mode-map (kbd "C-c j d") 'jtsx-delete-jsx-node))
-    
+
   (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
       (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
 
@@ -425,7 +427,7 @@
   (add-hook 'jtsx-tsx-mode-hook 'prettier-js-mode)
   (add-hook 'jtsx-jsx-mode-hook 'emmet-mode)
   (add-hook 'jtsx-tsx-mode-hook 'emmet-mode))
-  
+
   (use-package quelpa
     :ensure t
     :config
@@ -660,7 +662,6 @@
                   eshell-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-
   ;; Colorful parentheses when programming
   (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
@@ -713,7 +714,7 @@
     :ensure t)
 
   (put 'downcase-region 'disabled nil)
-  
+
 ;; Backup stored in backup folder
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
   backup-by-copying t    ; Don't delink hardlinks
