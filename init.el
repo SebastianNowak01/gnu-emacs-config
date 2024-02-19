@@ -201,15 +201,19 @@
   (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-tsx-mode . tsx)))
 
 ;; Snippets of code (all 3 need to be installed with package-install RET package-name RET)
-  (use-package yasnippet
-    :ensure t
-    :defer
-    :config
-    (yas-global-mode)
-    (use-package yasnippet-snippets
-      :ensure t)
-    (yas-reload-all))
-(auto-insert-mode t)
+(use-package yasnippet
+  :ensure t
+  :defer
+  :config
+  (yas-global-mode)
+  (use-package yasnippet-snippets
+    :ensure t)
+  (yas-reload-all))
+
+
+
+;; To add ts snippets jtsx modes create a .yas-parents file in snippets directory
+;; in .emacs.d directory and write 'typescript-mode'
 (use-package yatemplate)
 
 ;; Better file and buffer management
@@ -367,7 +371,7 @@
 
   ;;LSP mode for Typescript
   (use-package typescript-mode
-    :mode "\\.[jt]sx?\\'"
+    :mode "\\.[jt]s\\'"
     :config
 
     (setq typescript-indent-level 2)
@@ -397,19 +401,19 @@
   :config
   (defun jtsx-bind-keys-to-mode-map (mode-map)
     "Bind keys to MODE-MAP."
-    (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
-    (define-key mode-map (kbd "C-c j o") 'jtsx-jump-jsx-opening-tag)
-    (define-key mode-map (kbd "C-c j c") 'jtsx-jump-jsx-closing-tag)
-    (define-key mode-map (kbd "C-c j r") 'jtsx-rename-jsx-element)
-    (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
-    (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
-    (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
-    (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
-    (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
-    (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
-    (define-key mode-map (kbd "C-c j w") 'jtsx-wrap-in-jsx-element)
-    (define-key mode-map (kbd "C-c j u") 'jtsx-unwrap-jsx)
-    (define-key mode-map (kbd "C-c j d") 'jtsx-delete-jsx-node))
+  (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
+  (define-key mode-map (kbd "C-c C-a") 'jtsx-jump-jsx-opening-tag)
+  (define-key mode-map (kbd "C-c C-s") 'jtsx-jump-jsx-closing-tag)
+  (define-key mode-map (kbd "C-c C-r") 'jtsx-rename-jsx-element)
+  (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
+  (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
+  (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
+  (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
+  (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
+  (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
+  (define-key mode-map (kbd "C-c  C-w") 'jtsx-wrap-in-jsx-element)
+  (define-key mode-map (kbd "C-c  C-u") 'jtsx-unwrap-jsx)
+  (define-key mode-map (kbd "C-c  C-d") 'jtsx-delete-jsx-node))
 
   (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
       (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
@@ -644,8 +648,11 @@
           (?\" . ?\")
           (?\{ . ?\})))
 
-  ;; Refresh a file edited outside of emacs
-  (global-auto-revert-mode 1)
+;; Refresh a file edited outside of emacs
+(global-auto-revert-mode 1)
+
+;;insert boilerplate when creating a file
+(auto-insert-mode t)
 
   ;; Enabling column numbers
   (column-number-mode)
