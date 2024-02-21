@@ -6,7 +6,7 @@ These commands help speed up Emacs
 #+BEGIN_SRC elisp
   (setq gc-cons-threshold 100000000)
   (let ((file-name-handler-alist nil))
-    
+
 #+END_SRC
 * UI
 #+BEGIN_SRC elisp
@@ -19,7 +19,7 @@ These commands help speed up Emacs
 
 #+END_SRC
 * External Libraries
-Taken from my mmilek.
+Taken from my friend mmilek.
 #+BEGIN_SRC elisp
   ;; MM Library
   (load-file "/home/sebas/.emacs.d/mm-elisp/mm-latex-mode.el")
@@ -121,7 +121,7 @@ Keybinds mostly inspired by mmilek.
 
   ;; My personal keybind
   (global-set-key (kbd "C-x C-x") 'yas-expand)
-  
+
 #+END_SRC
 * Package manager
 #+BEGIN_SRC elisp
@@ -134,7 +134,7 @@ Keybinds mostly inspired by mmilek.
 
   (package-initialize)
   (unless package-archive-contents
-   (package-refresh-contents))
+    (package-refresh-contents))
 
   (require 'use-package)
   (setq use-package-always-ensure t)
@@ -155,13 +155,12 @@ Keybinds mostly inspired by mmilek.
       (setq dashboard-startup-banner "~/.emacs.d/hatsumi.jpg"))
     :config
     (dashboard-setup-startup-hook)
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-  (setq dashboard-items '(
-                          (recents  . 4)
-                          (projects . 3)
-                          (agenda . 5)
-                         ;;(bookmarks . 3)
-                          )))
+    (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+    (setq dashboard-items '(
+                            (recents  . 4)
+                            (projects . 3)
+                            (agenda . 5)
+                            )))
 
 #+END_SRC
 * Ivy
@@ -199,42 +198,41 @@ Keybinds mostly inspired by mmilek.
 #+END_SRC
 * Doom
 #+BEGIN_SRC elisp
-    ;; Bar at the bottom showing major and minor mode
-    (use-package doom-modeline
-      :ensure t
-      :init (doom-modeline-mode 1)
-      :custom ((doom-modeline-height 15)))
+  ;; Bar at the bottom showing major and minor mode
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
 
-    ;; Doom modeline icons for emacsclient
-    (setq doom-modeline-icon t)
+  ;; Doom modeline icons for emacsclient
+  (setq doom-modeline-icon t)
 
-    ;; Set Emacs theme
+  ;; Set Emacs theme
   (use-package doom-themes
-      :ensure t)
+    :ensure t)
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
 
   (load-theme 'doom-moonlight t)
-  
+
 #+END_SRC
 
 * Tree-sitter
 #+BEGIN_SRC elisp
-;; Better syntax highlighting
-(use-package tree-sitter
-  :ensure t)
+  ;; Better syntax highlighting
+  (use-package tree-sitter
+    :ensure t)
 
-;; Better tree sitter
-(use-package tree-sitter-langs
-  :defer
-  :ensure t
-  :config
-  (tree-sitter-require 'tsx)
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-  (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx))
-  (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-jsx-mode . tsx))
-  (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-tsx-mode . tsx)))
+  ;; Better tree sitter
+  (use-package tree-sitter-langs
+    :defer
+    :ensure t
+    :config
+    (tree-sitter-require 'tsx)
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+    (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-jsx-mode . tsx))
+    (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-tsx-mode . tsx)))
 
 #+END_SRC
 * Yasnippet
@@ -328,15 +326,15 @@ Keybinds mostly inspired by mmilek.
     :after lsp-mode
     :hook (lsp-mode . company-mode)
     :bind (:map company-active-map
-           ("<tab>" . company-complete-selection))
-          (:map lsp-mode-map
-                ("<tab>" . company-indent-or-complete-common)
-                )
+                ("<tab>" . company-complete-selection))
+    (:map lsp-mode-map
+          ("<tab>" . company-indent-or-complete-common)
+          )
     :custom
     (company-minimum-prefix-length 1)
     (company-idle-delay 0.0))
-    (setq company-tooltip-maximum-width 60)
-    (setq company-tooltip-margin 3)
+  (setq company-tooltip-maximum-width 60)
+  (setq company-tooltip-margin 3)
 
   ;; Prettier completions
   (use-package company-box
@@ -365,9 +363,9 @@ Keybinds mostly inspired by mmilek.
 
   ;; Fix broken prompt and completion prompts while running fish shell
   (with-eval-after-load 'vterm(add-hook 'term-exec-hook
-            (function
-             (lambda ()
-               (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))))
+                                        (function
+                                         (lambda ()
+                                           (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))))
 
   ;; Better terminal colors
   (use-package eterm-256color
@@ -403,13 +401,13 @@ Keybinds mostly inspired by mmilek.
 
 * Emmet
 #+BEGIN_SRC elisp
-    ;;emmet mode
-    (use-package emmet-mode
-      :config
+  ;;emmet mode
+  (use-package emmet-mode
+    :config
     (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
     (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
     (add-hook 'emmet-mode-hook (lambda () (setq emmet-indent-after-insert nil)))
-  (setq emmet-move-cursor-between-quotes t) ;; default nil
+    (setq emmet-move-cursor-between-quotes t) ;; default nil
     (add-to-list 'emmet-jsx-major-modes 'jtsx-jsx-mode)
     (add-to-list 'emmet-jsx-major-modes 'jtsx-tsx-mode))
 
@@ -420,39 +418,49 @@ Keybinds mostly inspired by mmilek.
 
 * Lsp
 #+BEGIN_SRC elisp
-      ;; Enables lsp communcation
-      (use-package lsp-mode
-        :ensure t
-        :commands (lsp lsp-deferred)
-        :hook (lsp-mode . tree-sitter-mode)
-        ;;:hook (lsp-mode . efs/lsp-mode-setup)
-        :init
-        (setq lsp-keymap-prefix "C-c l")
-        :config
-        (lsp-enable-which-key-integration t))
+  ;; Enables lsp communcation
+  (use-package lsp-mode
+    :ensure t
+    :commands (lsp lsp-deferred)
+    :hook (lsp-mode . tree-sitter-mode)
+    ;;:hook (lsp-mode . efs/lsp-mode-setup)
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    :config
+    (lsp-enable-which-key-integration t))
 
-      ;; Helpful ui lsp tweaks
-      (use-package lsp-ui
-        :hook (lsp-mode . lsp-ui-mode)
-        :custom
-        (lsp-ui-doc-position 'bottom))
+  ;; Helpful ui lsp tweaks
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom))
 
-      ;; Treemacs
-      (use-package lsp-treemacs
-        :after lsp)
-      (treemacs-project-follow-mode t)
+  ;; Treemacs
+  (use-package lsp-treemacs
+    :after lsp)
+  (treemacs-project-follow-mode t)
 
-      (use-package lsp-ivy)
+  (use-package lsp-ivy)
 
-    ;;LSP mode for Typescript
-    (use-package typescript-mode
-      :mode "\\.[jt]s\\'"
-      :config
+  ;;LSP mode for Typescript
+  (use-package typescript-mode
+    :mode "\\.[jt]s\\'"
+    :config
 
-      (setq typescript-indent-level 2)
-      (add-hook 'typescript-mode-hook 'lsp-deferred)
-      (add-hook 'typescript-mode-hook 'check-tsx)
-      (add-hook 'typescript-mode-hook 'prettier-js-mode))
+    (setq typescript-indent-level 2)
+    (add-hook 'typescript-mode-hook 'lsp-deferred)
+    (add-hook 'typescript-mode-hook 'prettier-js-mode))
+
+  ;; tailwind lsp working with jtsx mode 
+  (use-package lsp-tailwindcss
+    :init
+    :config
+    (setq lsp-tailwindcss-add-on-mode t)
+    (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-jsx-mode)
+    (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-tsx-mode))
+
+  (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
+
 
   ;; requires emmet mode to work correctly
   (use-package jtsx
@@ -476,98 +484,82 @@ Keybinds mostly inspired by mmilek.
     :config
     (defun jtsx-bind-keys-to-mode-map (mode-map)
       "Bind keys to MODE-MAP."
-    (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
-    (define-key mode-map (kbd "C-c C-a") 'jtsx-jump-jsx-opening-tag)
-    (define-key mode-map (kbd "C-c C-s") 'jtsx-jump-jsx-closing-tag)
-    (define-key mode-map (kbd "C-c C-r") 'jtsx-rename-jsx-element)
-    (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
-    (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
-    (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
-    (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
-    (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
-    (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
-    (define-key mode-map (kbd "C-c  C-w") 'jtsx-wrap-in-jsx-element)
-    (define-key mode-map (kbd "C-c  C-u") 'jtsx-unwrap-jsx)
-    (define-key mode-map (kbd "C-c  C-d") 'jtsx-delete-jsx-node))
-    
+      (define-key mode-map (kbd "C-c C-j") 'jtsx-jump-jsx-element-tag-dwim)
+      (define-key mode-map (kbd "C-c C-a") 'jtsx-jump-jsx-opening-tag)
+      (define-key mode-map (kbd "C-c C-s") 'jtsx-jump-jsx-closing-tag)
+      (define-key mode-map (kbd "C-c C-r") 'jtsx-rename-jsx-element)
+      (define-key mode-map (kbd "C-c <down>") 'jtsx-move-jsx-element-tag-forward)
+      (define-key mode-map (kbd "C-c <up>") 'jtsx-move-jsx-element-tag-backward)
+      (define-key mode-map (kbd "C-c C-<down>") 'jtsx-move-jsx-element-forward)
+      (define-key mode-map (kbd "C-c C-<up>") 'jtsx-move-jsx-element-backward)
+      (define-key mode-map (kbd "C-c C-S-<down>") 'jtsx-move-jsx-element-step-in-forward)
+      (define-key mode-map (kbd "C-c C-S-<up>") 'jtsx-move-jsx-element-step-in-backward)
+      (define-key mode-map (kbd "C-c  C-w") 'jtsx-wrap-in-jsx-element)
+      (define-key mode-map (kbd "C-c  C-u") 'jtsx-unwrap-jsx)
+      (define-key mode-map (kbd "C-c  C-d") 'jtsx-delete-jsx-node))
+
     (defun jtsx-bind-keys-to-jtsx-jsx-mode-map ()
-        (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
+      (jtsx-bind-keys-to-mode-map jtsx-jsx-mode-map))
 
     (defun jtsx-bind-keys-to-jtsx-tsx-mode-map ()
-        (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
+      (jtsx-bind-keys-to-mode-map jtsx-tsx-mode-map))
 
     (add-hook 'jtsx-jsx-mode-hook 'jtsx-bind-keys-to-jtsx-jsx-mode-map)
-    (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
     (add-hook 'jtsx-jsx-mode-hook 'lsp)
     (add-hook 'jtsx-jsx-mode-hook 'tree-sitter-mode)
+    (add-hook 'jtsx-jsx-mode-hook 'prettier-js-mode)
+    (add-hook 'jtsx-jsx-mode-hook 'emmet-mode)
+    (add-hook 'jtsx-tsx-mode-hook 'jtsx-bind-keys-to-jtsx-tsx-mode-map)
     (add-hook 'jtsx-tsx-mode-hook 'lsp)
     (add-hook 'jtsx-tsx-mode-hook 'tree-sitter-mode)
-    (add-hook 'jtsx-jsx-mode-hook 'prettier-js-mode)
     (add-hook 'jtsx-tsx-mode-hook 'prettier-js-mode)
-    (add-hook 'jtsx-jsx-mode-hook 'emmet-mode)
     (add-hook 'jtsx-tsx-mode-hook 'emmet-mode))
-  
-    (use-package quelpa
-      :ensure t
-      :config
-      (use-package quelpa-use-package
-        :ensure t))
 
-    (use-package tsi
-      :after tree-sitter
-      ;; :quelpa (tsi :fetcher github :repo "orzechowskid/tsi.el")
-      ;; define autoload definitions which when actually invoked will cause package to be loaded
-      :commands (tsi-typescript-mode tsi-json-mode tsi-css-mode)
-      :init
-      (add-hook 'typescript-mode-hook (lambda () (tsi-typescript-mode 1)))
-      (add-hook 'json-mode-hook (lambda () (tsi-json-mode 1)))
-      (add-hook 'css-mode-hook (lambda () (tsi-css-mode 1)))
-      (add-hook 'scss-mode-hook (lambda () (tsi-scss-mode 1))))
+  ;; LSP mode for HTML
+  (use-package mhtml-mode
+    :mode "\\.html\\'"
+    :config
+    (add-hook 'mhtml-mode-hook 'lsp))
 
-    ;; LSP mode for HTML
-    (use-package mhtml-mode
-      :mode "\\.html\\'"
-      :config
-      (add-hook 'mhtml-mode-hook 'lsp))
+  ;; LSP mode for CSS
+  (use-package css-mode
+    :mode "\\..?css\\'"
+    :config
+    (add-hook 'css-mode-hook 'lsp)
+    (setq css-indent-offset 2))
 
-    ;; LSP mode for CSS
-    (use-package css-mode
-      :mode "\\..?css\\'"
-      :config
-      (add-hook 'css-mode-hook 'lsp))
+  ;; LSP mode for C/C++
+  (add-hook 'c-mode-hook 'lsp)
+  (setq-default c-basic-offset 4)
+  (add-hook 'c++-mode-hook 'rebind)
+  (add-hook 'c++-mode-hook 'lsp)
+  (add-hook 'c++-mode-hook (lambda () (local-unset-key (kbd"C-M-h"))))
+  (setq-default c++-basic-offset 4)
 
-    ;; LSP mode for C/C++
-    (add-hook 'c-mode-hook 'lsp)
-    (setq-default c-basic-offset 4)
-    (add-hook 'c++-mode-hook 'rebind)
-    (add-hook 'c++-mode-hook 'lsp)
-    (add-hook 'c++-mode-hook (lambda () (local-unset-key (kbd"C-M-h"))))
-    (setq-default c++-basic-offset 4)
+  (use-package clang-format
+    :ensure t)
+  (setq-default clang-format-fallback-style "WebKit")
 
-    (use-package clang-format
-      :ensure t)
-    (setq-default clang-format-fallback-style "WebKit")
+  ;; LSP mode for Rust
+  (use-package rustic
+    :ensure t
+    :hook (rustic-mode . lsp)
+    :config
+    (require 'lsp-rust)
+    (setq lsp-rust-analyzer-completion-add-call-parenthesis t))
 
-    ;; LSP mode for Rust
-    (use-package rustic
-      :ensure t
-      :hook (rustic-mode . lsp)
-      :config
-      (require 'lsp-rust)
-      (setq lsp-rust-analyzer-completion-add-call-parenthesis t))
+  ;; LSP mode for Emacs
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
 
-    ;; LSP mode for Emacs
-    (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  ;; LSP mode for LaTex
+  (add-hook 'LaTeX-mode-hook
+            (local-set-key (kbd "C-c C-. M-c") 'mm/latex-compile)
+            (local-set-key (kbd "C-c C-. M-v") 'mm/latex-compile-and-view)
+            (lambda () (local-unset-key (kbd "C-j"))))
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (add-hook 'tex-mode-hook 'lsp)
 
-    ;; LSP mode for LaTex
-    (add-hook 'LaTeX-mode-hook
-              (local-set-key (kbd "C-c C-. M-c") 'mm/latex-compile)
-              (local-set-key (kbd "C-c C-. M-v") 'mm/latex-compile-and-view)
-              (lambda () (local-unset-key (kbd "C-j"))))
-    (setq TeX-auto-save t)
-    (setq TeX-parse-self t)
-    (add-hook 'tex-mode-hook 'lsp)
-  
 #+END_SRC
 * Org
 #+BEGIN_SRC elisp
@@ -632,71 +624,71 @@ Keybinds mostly inspired by mmilek.
   (setq org-habit-graph-column 60)
 
   (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-     (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
-    ;; Configure custom agenda views
-    (setq org-agenda-custom-commands
-     '(("d" "Dashboard"
-       ((agenda "" ((org-deadline-warning-days 7)))
-        (todo "NEXT"
-          ((org-agenda-overriding-header "Next Tasks")))
-        (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+  ;; Configure custom agenda views
+  (setq org-agenda-custom-commands
+        '(("d" "Dashboard"
+           ((agenda "" ((org-deadline-warning-days 7)))
+            (todo "NEXT"
+                  ((org-agenda-overriding-header "Next Tasks")))
+            (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-      ("n" "Next Tasks"
-       ((todo "NEXT"
-          ((org-agenda-overriding-header "Next Tasks")))))
+          ("n" "Next Tasks"
+           ((todo "NEXT"
+                  ((org-agenda-overriding-header "Next Tasks")))))
 
-      ("W" "Work Tasks" tags-todo "+work-email")
+          ("W" "Work Tasks" tags-todo "+work-email")
 
-      ;; Low-effort next actions
-      ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-       ((org-agenda-overriding-header "Low Effort Tasks")
-        (org-agenda-max-todos 20)
-        (org-agenda-files org-agenda-files)))
+          ;; Low-effort next actions
+          ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+           ((org-agenda-overriding-header "Low Effort Tasks")
+            (org-agenda-max-todos 20)
+            (org-agenda-files org-agenda-files)))
 
-      ("w" "Workflow Status"
-       ((todo "WAIT"
-              ((org-agenda-overriding-header "Waiting on External")
-               (org-agenda-files org-agenda-files)))
-        (todo "REVIEW"
-              ((org-agenda-overriding-header "In Review")
-               (org-agenda-files org-agenda-files)))
-        (todo "PLAN"
-              ((org-agenda-overriding-header "In Planning")
-               (org-agenda-todo-list-sublevels nil)
-               (org-agenda-files org-agenda-files)))
-        (todo "BACKLOG"
-              ((org-agenda-overriding-header "Project Backlog")
-               (org-agenda-todo-list-sublevels nil)
-               (org-agenda-files org-agenda-files)))
-        (todo "READY"
-              ((org-agenda-overriding-header "Ready for Work")
-               (org-agenda-files org-agenda-files)))
-        (todo "ACTIVE"
-              ((org-agenda-overriding-header "Active Projects")
-               (org-agenda-files org-agenda-files)))
-        (todo "COMPLETED"
-              ((org-agenda-overriding-header "Completed Projects")
-               (org-agenda-files org-agenda-files)))
-        (todo "CANC"
-              ((org-agenda-overriding-header "Cancelled Projects")
-               (org-agenda-files org-agenda-files)))))))
+          ("w" "Workflow Status"
+           ((todo "WAIT"
+                  ((org-agenda-overriding-header "Waiting on External")
+                   (org-agenda-files org-agenda-files)))
+            (todo "REVIEW"
+                  ((org-agenda-overriding-header "In Review")
+                   (org-agenda-files org-agenda-files)))
+            (todo "PLAN"
+                  ((org-agenda-overriding-header "In Planning")
+                   (org-agenda-todo-list-sublevels nil)
+                   (org-agenda-files org-agenda-files)))
+            (todo "BACKLOG"
+                  ((org-agenda-overriding-header "Project Backlog")
+                   (org-agenda-todo-list-sublevels nil)
+                   (org-agenda-files org-agenda-files)))
+            (todo "READY"
+                  ((org-agenda-overriding-header "Ready for Work")
+                   (org-agenda-files org-agenda-files)))
+            (todo "ACTIVE"
+                  ((org-agenda-overriding-header "Active Projects")
+                   (org-agenda-files org-agenda-files)))
+            (todo "COMPLETED"
+                  ((org-agenda-overriding-header "Completed Projects")
+                   (org-agenda-files org-agenda-files)))
+            (todo "CANC"
+                  ((org-agenda-overriding-header "Cancelled Projects")
+                   (org-agenda-files org-agenda-files)))))))
 
   ;; list tags
   (setq org-tag-alist
-    '((:startgroup)
-       ; Put mutually exclusive tags here
-       (:endgroup)
-       ("@errand" . ?E)
-       ("@home" . ?H)
-       ("@work" . ?W)
-       ("agenda" . ?a)
-       ("planning" . ?p)
-       ("publish" . ?P)
-       ("batch" . ?b)
-       ("note" . ?n)
-       ("idea" . ?i)))
+        '((:startgroup)
+                                          ; Put mutually exclusive tags here
+          (:endgroup)
+          ("@errand" . ?E)
+          ("@home" . ?H)
+          ("@work" . ?W)
+          ("agenda" . ?a)
+          ("planning" . ?p)
+          ("publish" . ?P)
+          ("batch" . ?b)
+          ("note" . ?n)
+          ("idea" . ?i)))
 
   ;; Moves done tasks to archive
 
@@ -704,12 +696,12 @@ Keybinds mostly inspired by mmilek.
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
 
   (define-key global-map (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "jj")))
+              (lambda () (interactive) (org-capture nil "jj")))
 
   (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((emacs-lisp . t)
-      (python . t)))
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)))
 
   (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
@@ -717,18 +709,18 @@ Keybinds mostly inspired by mmilek.
 * Minor functions
 Minor functions that improve quality of life.
 #+BEGIN_SRC elisp
-    ;; Use spaces as indentation
-    (indent-tabs-mode nil)
+  ;; Use spaces as indentation
+  (indent-tabs-mode nil)
 
-    ;; Subword mode help with different nameing convenctions (camelCase, snake_case)
-    (global-subword-mode 1)
+  ;; Subword mode help with different nameing convenctions (camelCase, snake_case)
+  (global-subword-mode 1)
 
-    ;; Auto close (), "", {}
-    (electric-pair-mode 1)
-    (setq electric-pair-pairs
-          '(
-            (?\" . ?\")
-            (?\{ . ?\})))
+  ;; Auto close (), "", {}
+  (electric-pair-mode 1)
+  (setq electric-pair-pairs
+        '(
+          (?\" . ?\")
+          (?\{ . ?\})))
 
   ;; Refresh a file edited outside of emacs
   (global-auto-revert-mode 1)
@@ -736,82 +728,82 @@ Minor functions that improve quality of life.
   ;;insert boilerplate when creating a file
   (auto-insert-mode t)
 
-    ;; Enabling column numbers
-    (column-number-mode)
-    (global-display-line-numbers-mode t)
+  ;; Enabling column numbers
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
 
-    ;; Disable line numbers for some modes
-    (dolist (mode '(org-mode-hook
-                    term-mode-hook
-                    vterm-mode-hook
-                    treemacs-mode-hook
-                    rustic-cargo-run-mode-hook
-                    rustic-cargo-test-mode-hook
-                    shell-mode-hook
-                    eshell-mode-hook))
-      (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  vterm-mode-hook
+                  treemacs-mode-hook
+                  rustic-cargo-run-mode-hook
+                  rustic-cargo-test-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-    ;; Colorful parentheses when programming
-    (use-package rainbow-delimiters
-      :hook (prog-mode . rainbow-delimiters-mode))
+  ;; Colorful parentheses when programming
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
 
-    ;; truncates lines
-    (setq-default truncate-lines t)
+  ;; truncates lines
+  (setq-default truncate-lines t)
 
-    ;; you can delete the selected text just by hitting the Backspace key ( 'DEL' )
-    (delete-selection-mode 1)
+  ;; you can delete the selected text just by hitting the Backspace key ( 'DEL' )
+  (delete-selection-mode 1)
 
-    ;; NOTE: The first time you load your configuration on a new machine, you'll
-    ;; need to run the following command interactively so that mode line icons
-    ;; display correctly:
-    ;;
-    ;; M-x all-the-icons-install-fonts
+  ;; NOTE: The first time you load your configuration on a new machine, you'll
+  ;; need to run the following command interactively so that mode line icons
+  ;; display correctly:
+  ;;
+  ;; M-x all-the-icons-install-fonts
 
-    (use-package all-the-icons)
+  (use-package all-the-icons)
 
-    ;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
-    (use-package multiple-cursors)
+  ;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
+  (use-package multiple-cursors)
 
-    ;; Shows where cursor is
-    (use-package beacon
-      :ensure t)
-    (beacon-mode 1)
+  ;; Shows where cursor is
+  (use-package beacon
+    :ensure t)
+  (beacon-mode 1)
 
-    ;; Better tex
-    (use-package tex
-      :ensure auctex
-      :defer)
+  ;; Better tex
+  (use-package tex
+    :ensure auctex
+    :defer)
 
-    ;; Better pdf
-    (use-package pdf-tools
-      :defer
-      :ensure t)
+  ;; Better pdf
+  (use-package pdf-tools
+    :defer
+    :ensure t)
 
-    ;; Shortcut help
-    (use-package which-key
-      :init (which-key-mode)
-      :diminish which-key-mode
-      :config
-      (setq which-key-idle-delay 1))
+  ;; Shortcut help
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 1))
 
-    ;; Alt + arrows for Emacs
-    (use-package move-dup
-      :ensure t)
+  ;; Alt + arrows for Emacs
+  (use-package move-dup
+    :ensure t)
 
-    ;; Jump to desired line
-    (use-package goto-line-preview
-      :ensure t)
+  ;; Jump to desired line
+  (use-package goto-line-preview
+    :ensure t)
 
-    (put 'downcase-region 'disabled nil)
+  (put 'downcase-region 'disabled nil)
 
   ;; Backup stored in backup folder
   (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-    backup-by-copying t    ; Don't delink hardlinks
-    version-control t      ; Use version numbers on backups
-    delete-old-versions t  ; Automatically delete excess backups
-    kept-new-versions 20   ; how many of the newest versions to keep
-    kept-old-versions 5    ; and how many of the old
-    )
+        backup-by-copying t    ; Don't delink hardlinks
+        version-control t      ; Use version numbers on backups
+        delete-old-versions t  ; Automatically delete excess backups
+        kept-new-versions 20   ; how many of the newest versions to keep
+        kept-old-versions 5    ; and how many of the old
+        )
 
 #+END_SRC
 * Speed up Emacs start up (2/2)
