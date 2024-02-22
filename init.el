@@ -163,7 +163,9 @@
 
 ;; Better ivy
 (use-package ivy-rich
+  :ensure t
   :init
+  :config
   (ivy-rich-mode 1))
 
 ;; Bar at the bottom showing major and minor mode
@@ -212,7 +214,8 @@
 
 ;; To add ts snippets jtsx modes create a .yas-parents file in snippets directory
 ;; in .emacs.d directory and write 'typescript-mode'
-(use-package yatemplate)
+(use-package yatemplate
+  :ensure t)
 
 ;; Better file and buffer management
 (use-package counsel
@@ -248,6 +251,7 @@
 
 ;; Better projectile mode
 (use-package counsel-projectile
+  :ensure t
   :config (counsel-projectile-mode))
 
 ;; Better Dired
@@ -289,6 +293,7 @@
 
 ;; Git porcelain
 (use-package magit
+  :ensure t
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
@@ -327,11 +332,13 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; restclient and resclient mode for .http files
-(use-package restclient)
+(use-package restclient
+  :ensure t)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;;emmet mode
 (use-package emmet-mode
+  :ensure t
   :config
   (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
   (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
@@ -348,7 +355,6 @@
   :ensure t
   :commands (lsp lsp-deferred)
   :hook (lsp-mode . tree-sitter-mode)
-  ;;:hook (lsp-mode . efs/lsp-mode-setup)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
@@ -356,42 +362,46 @@
 
 ;; Helpful ui lsp tweaks
 (use-package lsp-ui
+  :ensure t
   :hook (lsp-mode . lsp-ui-mode)
   :custom
   (lsp-ui-doc-position 'bottom))
 
 ;; Treemacs
 (use-package lsp-treemacs
-  :after lsp)
-(treemacs-project-follow-mode t)
+  :after lsp
+  :config
+  (treemacs-project-follow-mode t))
 
-(use-package lsp-ivy)
+(use-package lsp-ivy
+  :ensure t)
+
+(use-package prettier-js
+  :ensure t)
 
 ;;LSP mode for Typescript
 (use-package typescript-mode
   :mode "\\.[jt]s\\'"
   :config
-
   (setq typescript-indent-level 2)
   (add-hook 'typescript-mode-hook 'lsp-deferred)
   (add-hook 'typescript-mode-hook 'prettier-js-mode))
 
 ;; tailwind lsp working with jtsx mode 
 (use-package lsp-tailwindcss
+  :ensure t
   :init
-  :config
   (setq lsp-tailwindcss-add-on-mode t)
+  :config
   (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-jsx-mode)
   (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-tsx-mode))
-
 (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
-
 
 ;; requires emmet mode to work correctly
 (use-package jtsx
   :ensure t
-  :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
-         ("\\.tsx?\\'" . jtsx-tsx-mode))
+  :mode (("\\.jsx\\'" . jtsx-jsx-mode)
+         ("\\.tsx\\'" . jtsx-tsx-mode))
   :commands jtsx-install-treesit-language
   :hook ((jtsx-jsx-mode . hs-minor-mode)
          (jtsx-tsx-mode . hs-minor-mode))
@@ -600,7 +610,7 @@
 ;; list tags
 (setq org-tag-alist
       '((:startgroup)
-                                        ; Put mutually exclusive tags here
+        ;; Put mutually exclusive tags here
         (:endgroup)
         ("@errand" . ?E)
         ("@home" . ?H)
@@ -611,8 +621,6 @@
         ("batch" . ?b)
         ("note" . ?n)
         ("idea" . ?i)))
-
-;; Moves done tasks to archive
 
 ;; Save Org buffers after refiling!
 (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -663,6 +671,7 @@
 
 ;; Colorful parentheses when programming
 (use-package rainbow-delimiters
+  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; truncates lines
@@ -680,12 +689,15 @@
 (use-package all-the-icons)
 
 ;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
-(use-package multiple-cursors)
+(use-package multiple-cursors
+  :ensure t)
 
 ;; Shows where cursor is
 (use-package beacon
-  :ensure t)
-(beacon-mode 1)
+  :ensure t
+  :config
+  (beacon-mode 1))
+
 
 ;; Better tex
 (use-package tex
@@ -699,6 +711,7 @@
 
 ;; Shortcut help
 (use-package which-key
+  :ensure t
   :init (which-key-mode)
   :diminish which-key-mode
   :config
@@ -724,4 +737,3 @@
       )
 
 )
-(setq gc-cons-threshold 800000)

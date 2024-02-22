@@ -466,8 +466,8 @@ Keybinds mostly inspired by mmilek.
   (use-package lsp-tailwindcss
     :ensure t
     :init
-    :config
     (setq lsp-tailwindcss-add-on-mode t)
+    :config
     (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-jsx-mode)
     (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-tsx-mode))
   (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
@@ -475,8 +475,8 @@ Keybinds mostly inspired by mmilek.
   ;; requires emmet mode to work correctly
   (use-package jtsx
     :ensure t
-    :mode (("\\.jsx?\\'" . jtsx-jsx-mode)
-           ("\\.tsx?\\'" . jtsx-tsx-mode))
+    :mode (("\\.jsx\\'" . jtsx-jsx-mode)
+           ("\\.tsx\\'" . jtsx-tsx-mode))
     :commands jtsx-install-treesit-language
     :hook ((jtsx-jsx-mode . hs-minor-mode)
            (jtsx-tsx-mode . hs-minor-mode))
@@ -823,9 +823,5 @@ Minor functions that improve quality of life.
 These commands help speed up Emacs
 #+BEGIN_SRC elisp
   )
-  (setq gc-cons-threshold 800000)
 #+END_SRC
-
-#+RESULTS:
-: 800000
 
