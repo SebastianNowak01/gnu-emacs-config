@@ -192,7 +192,9 @@ Keybinds mostly inspired by mmilek.
 
   ;; Better ivy
   (use-package ivy-rich
+    :ensure t
     :init
+    :config
     (ivy-rich-mode 1))
 
 #+END_SRC
@@ -251,7 +253,8 @@ Keybinds mostly inspired by mmilek.
 
   ;; To add ts snippets jtsx modes create a .yas-parents file in snippets directory
   ;; in .emacs.d directory and write 'typescript-mode'
-  (use-package yatemplate)
+  (use-package yatemplate
+    :ensure t)
 
 #+END_SRC
 * Counsel
@@ -297,6 +300,7 @@ Keybinds mostly inspired by mmilek.
 
   ;; Better projectile mode
   (use-package counsel-projectile
+    :ensure t
     :config (counsel-projectile-mode))
 
 #+END_SRC
@@ -347,6 +351,7 @@ Keybinds mostly inspired by mmilek.
 #+BEGIN_SRC elisp
   ;; Git porcelain
   (use-package magit
+    :ensure t
     :custom
     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
@@ -394,7 +399,8 @@ Keybinds mostly inspired by mmilek.
 * Restclient
 #+BEGIN_SRC elisp
   ;; restclient and resclient mode for .http files
-  (use-package restclient)
+  (use-package restclient
+    :ensure t)
   (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 #+END_SRC
@@ -403,6 +409,7 @@ Keybinds mostly inspired by mmilek.
 #+BEGIN_SRC elisp
   ;;emmet mode
   (use-package emmet-mode
+    :ensure t
     :config
     (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
     (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
@@ -423,7 +430,6 @@ Keybinds mostly inspired by mmilek.
     :ensure t
     :commands (lsp lsp-deferred)
     :hook (lsp-mode . tree-sitter-mode)
-    ;;:hook (lsp-mode . efs/lsp-mode-setup)
     :init
     (setq lsp-keymap-prefix "C-c l")
     :config
@@ -437,10 +443,12 @@ Keybinds mostly inspired by mmilek.
 
   ;; Treemacs
   (use-package lsp-treemacs
-    :after lsp)
-  (treemacs-project-follow-mode t)
+    :after lsp
+    :config
+    (treemacs-project-follow-mode t))
 
-  (use-package lsp-ivy)
+  (use-package lsp-ivy
+    :ensure t)
 
   ;;LSP mode for Typescript
   (use-package typescript-mode
@@ -453,14 +461,13 @@ Keybinds mostly inspired by mmilek.
 
   ;; tailwind lsp working with jtsx mode 
   (use-package lsp-tailwindcss
+    :ensure t
     :init
     :config
     (setq lsp-tailwindcss-add-on-mode t)
     (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-jsx-mode)
     (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-tsx-mode))
-
   (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
-
 
   ;; requires emmet mode to work correctly
   (use-package jtsx
@@ -678,7 +685,7 @@ Keybinds mostly inspired by mmilek.
   ;; list tags
   (setq org-tag-alist
         '((:startgroup)
-                                          ; Put mutually exclusive tags here
+          ;; Put mutually exclusive tags here
           (:endgroup)
           ("@errand" . ?E)
           ("@home" . ?H)
@@ -689,8 +696,6 @@ Keybinds mostly inspired by mmilek.
           ("batch" . ?b)
           ("note" . ?n)
           ("idea" . ?i)))
-
-  ;; Moves done tasks to archive
 
   ;; Save Org buffers after refiling!
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -745,12 +750,14 @@ Minor functions that improve quality of life.
 
   ;; Colorful parentheses when programming
   (use-package rainbow-delimiters
+    :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
 
   ;; truncates lines
   (setq-default truncate-lines t)
 
-  ;; you can delete the selected text just by hitting the Backspace key ( 'DEL' )
+  ;; you can delete the selected text just by hitting the Backspace key
+( 'DEL' )
   (delete-selection-mode 1)
 
   ;; NOTE: The first time you load your configuration on a new machine, you'll
@@ -762,12 +769,15 @@ Minor functions that improve quality of life.
   (use-package all-the-icons)
 
   ;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
-  (use-package multiple-cursors)
+  (use-package multiple-cursors
+    :ensure t)
 
   ;; Shows where cursor is
   (use-package beacon
-    :ensure t)
-  (beacon-mode 1)
+    :ensure t
+    :config
+    (beacon-mode 1))
+
 
   ;; Better tex
   (use-package tex
@@ -781,6 +791,7 @@ Minor functions that improve quality of life.
 
   ;; Shortcut help
   (use-package which-key
+    :ensure t
     :init (which-key-mode)
     :diminish which-key-mode
     :config
