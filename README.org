@@ -756,8 +756,7 @@ Minor functions that improve quality of life.
   ;; truncates lines
   (setq-default truncate-lines t)
 
-  ;; you can delete the selected text just by hitting the Backspace key
-( 'DEL' )
+  ;; you can delete the selected text just by hitting the Backspace key ( 'DEL' )
   (delete-selection-mode 1)
 
   ;; NOTE: The first time you load your configuration on a new machine, you'll
