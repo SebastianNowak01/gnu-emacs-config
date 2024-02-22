@@ -437,6 +437,7 @@ Keybinds mostly inspired by mmilek.
 
   ;; Helpful ui lsp tweaks
   (use-package lsp-ui
+    :ensure t
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-position 'bottom))
@@ -450,11 +451,13 @@ Keybinds mostly inspired by mmilek.
   (use-package lsp-ivy
     :ensure t)
 
+  (use-package prettier-js
+    :ensure t)
+
   ;;LSP mode for Typescript
   (use-package typescript-mode
     :mode "\\.[jt]s\\'"
     :config
-
     (setq typescript-indent-level 2)
     (add-hook 'typescript-mode-hook 'lsp-deferred)
     (add-hook 'typescript-mode-hook 'prettier-js-mode))
