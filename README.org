@@ -1,6 +1,6 @@
 #+TITLE: Emacs Config
 #+PROPERTY: header-args :tangle "~/.emacs.d/init.el"
-My personal Emacs config. Main part of the config was written with help of David Wilson [[https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=2][Emacs From Scratch]] series. Some of the functions and keybinds were taken from [[https:github.com/m-milek][m-milek]].
+My personal Emacs config. Main part of the config was written with help of David Wilson [[https://www.youtube.com/watch?v=74zOY-vgkyw&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=2][Emacs From Scratch]] series. Some of the functions and keybinds were taken from [[https://github.com/m-milek][m-milek]].
 To create an init file from this README use function: org-babel-tangle.
 * Speed up Emacs start up (1/2)
 These commands help speed up Emacs.
