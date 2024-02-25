@@ -33,8 +33,8 @@
 (global-set-key (kbd "C-M-h") 'left-word)
 (global-unset-key (kbd "C-M-j"))
 (global-set-key (kbd "C-M-j") nil)
-(global-set-key (kbd "C-M-j") (lambda () (interactive) (next-line 4)))
-(global-set-key (kbd "C-M-k") (lambda () (interactive) (previous-line 4)))
+(global-set-key (kbd "C-M-j") (lambda () (interactive) (forward-line 4)))
+(global-set-key (kbd "C-M-k") (lambda () (interactive) (forward-line -4)))
 (global-set-key (kbd "C-M-l") 'right-word)
 (global-set-key (kbd "C-m") 'back-to-indentation)
 (global-set-key (kbd "RET") 'newline)
@@ -44,8 +44,13 @@
 (global-set-key (kbd "C-f") 'kill-line)
 (global-set-key (kbd "C-p") 'help-command)
 (global-set-key (kbd "C-b") 'recenter-top-bottom)
-(global-set-key (kbd "C-M-o") 'counsel-switch-buffer)
 
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-c v") 'ivy-push-view)
+(global-set-key (kbd "C-c V") 'ivy-pop-view)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+
+(global-set-key (kbd "C-M-o") 'counsel-switch-buffer)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "M-y") 'counsel-yank-pop)
@@ -55,9 +60,6 @@
 (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
 (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 (global-set-key (kbd "<f2> j") 'counsel-set-variable)
-(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
-(global-set-key (kbd "C-c v") 'ivy-push-view)
-(global-set-key (kbd "C-c V") 'ivy-pop-view)
 (global-set-key (kbd "C-c c") 'counsel-compile)
 (global-set-key (kbd "C-c g") 'counsel-git)
 (global-set-key (kbd "C-c j") 'counsel-git-grep)
@@ -68,7 +70,6 @@
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-c J") 'counsel-file-jump)
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
 (global-set-key (kbd "C-c b") 'counsel-bookmark)
 (global-set-key (kbd "C-c d") 'counsel-descbinds)
 (global-set-key (kbd "C-c o") 'counsel-outline)
@@ -83,7 +84,6 @@
 (global-set-key (kbd "M-<down>") 'move-dup-move-lines-down)
 (global-set-key (kbd "C-M-<up>") 'move-dup-duplicate-up)
 (global-set-key (kbd "C-M-<down>") 'move-dup-duplicate-down)
-
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C-.") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-,") 'mc/mark-previous-like-this)
@@ -131,9 +131,8 @@
   (dashboard-setup-startup-hook)
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   (setq dashboard-items '(
-                          (recents  . 4)
-                          (projects . 3)
-                          (agenda . 5)
+                          (recents  . 5)
+                          (projects . 5)
                           )))
 
 ;; Searching through file made easier
@@ -172,18 +171,17 @@
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
-
-;; Doom modeline icons for emacsclient
-(setq doom-modeline-icon t)
+  :custom ((doom-modeline-height 15))
+  :config
+  (setq doom-modeline-icon t))
 
 ;; Set Emacs theme
 (use-package doom-themes
-  :ensure t)
-(setq doom-themes-enable-bold t)
-(setq doom-themes-enable-italic t)
-
-(load-theme 'doom-moonlight t)
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t)
+  (setq doom-themes-enable-italic t)
+  (load-theme 'doom-moonlight t))
 
 ;; Better syntax highlighting
 (use-package tree-sitter
@@ -196,21 +194,18 @@
   :config
   (tree-sitter-require 'tsx)
   (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-  (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-jsx-mode . tsx))
-  (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-tsx-mode . tsx)))
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-;; Snippets of code (all 3 need to be installed with package-install RET package-name RET)
+;; Snippets of code
 (use-package yasnippet
   :ensure t
   :defer
   :config
   (yas-global-mode)
-  (use-package yasnippet-snippets
-    :ensure t)
   (yas-reload-all))
 
-
+(use-package yasnippet-snippets
+  :ensure t)
 
 ;; To add ts snippets jtsx modes create a .yas-parents file in snippets directory
 ;; in .emacs.d directory and write 'typescript-mode'
@@ -257,14 +252,14 @@
 ;; Better Dired
 (use-package dired
   :ensure nil
-  :custom ((dired-listing-switches "-agho --group-directories-first")))
+  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :config
+  (setf dired-kill-when-opening-new-dired-buffer t))
 
 (use-package all-the-icons-dired
   :ensure t
   :hook (dired-mode
          . all-the-icons-dired-mode))
-
-(setf dired-kill-when-opening-new-dired-buffer t)
 
 ;; Single buffer for dired
 (use-package dired-single
@@ -281,15 +276,16 @@
         )
   :custom
   (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
+  (company-idle-delay 0.5))
 (setq company-tooltip-maximum-width 60)
 (setq company-tooltip-margin 3)
 
 ;; Prettier completions
 (use-package company-box
   :ensure t
-  :hook (company-mode . company-box-mode))
-(setq company-box-doc-enable t)
+  :hook (company-mode . company-box-mode)
+  :config
+  (setq company-box-doc-enable t))
 
 ;; Git porcelain
 (use-package magit
@@ -318,15 +314,15 @@
 ;; Syntax checking
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
+  :init (global-flycheck-mode)
+  :config
+  (setq-default flycheck-disabled-checkers
+		(append flycheck-disabled-checkers
+			'(javascript-jshint json-jsonlist))))
 ;; Increase the amount of data which Emacs reads from the process.
 ;; Default value is causing a slowdown, it's too low to handle server responses.
-(setq read-process-output-max (*(* 1024 1024) 3)) ;; 3Mib
+(setq read-process-output-max (*(* 1024 1024) 5)) ;; 3Mib
 (setq lsp-headerline-breadcrumb-enable nil)
-
-(setq-default flycheck-disabled-checkers
-              (append flycheck-disabled-checkers
-                      '(javascript-jshint json-jsonlist)))
 
 ;; Enable flycheck globally
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -349,6 +345,13 @@
 
 (with-eval-after-load "emmet-mode"
   (define-key emmet-mode-keymap (kbd "C-j") nil))
+
+(use-package dap-mode
+  :ensure t
+  :config
+  (setq dap-auto-configure-mode t)
+  (require 'dap-node)
+  (require 'dap-cpptools))
 
 ;; Enables lsp communcation
 (use-package lsp-mode
@@ -381,13 +384,14 @@
 
 ;;LSP mode for Typescript
 (use-package typescript-mode
+  :ensure t
   :mode "\\.[jt]s\\'"
   :config
   (setq typescript-indent-level 2)
-  (add-hook 'typescript-mode-hook 'lsp-deferred)
+  (add-hook 'typescript-mode-hook 'lsp)
   (add-hook 'typescript-mode-hook 'prettier-js-mode))
 
-;; tailwind lsp working with jtsx mode 
+;; tailwind lsp working with jtsx mode
 (use-package lsp-tailwindcss
   :ensure t
   :init
@@ -397,7 +401,6 @@
   (add-to-list 'lsp-tailwindcss-major-modes 'jtsx-tsx-mode))
 (add-hook 'before-save-hook 'lsp-tailwindcss-rustywind-before-save)
 
-;; requires emmet mode to work correctly
 (use-package jtsx
   :ensure t
   :mode (("\\.jsx\\'" . jtsx-jsx-mode)
@@ -449,8 +452,11 @@
   (add-hook 'jtsx-tsx-mode-hook 'tree-sitter-mode)
   (add-hook 'jtsx-tsx-mode-hook 'prettier-js-mode)
   (add-hook 'jtsx-tsx-mode-hook 'emmet-mode))
+ 
+(add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-jsx-mode . tsx))
+(add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-tsx-mode . tsx))
 
-;; LSP mode for HTML
+;; lsp mode for HTML
 (use-package mhtml-mode
   :mode "\\.html\\'"
   :config
@@ -483,8 +489,8 @@
   (require 'lsp-rust)
   (setq lsp-rust-analyzer-completion-add-call-parenthesis t))
 
-;; LSP mode for Emacs
-(add-hook 'emacs-lisp-mode-hook 'company-mode)
+;; ;; LSP mode for Emacs
+;; (add-hook 'emacs-lisp-mode-hook 'company-mode)
 
 ;; LSP mode for LaTex
 (add-hook 'LaTeX-mode-hook
@@ -651,6 +657,9 @@
 ;; Refresh a file edited outside of emacs
 (global-auto-revert-mode 1)
 
+;; Enable company mode globally
+(global-company-mode 1)
+
 ;;insert boilerplate when creating a file
 (auto-insert-mode t)
 
@@ -685,10 +694,9 @@
 ;; display correctly:
 ;;
 ;; M-x all-the-icons-install-fonts
-
 (use-package all-the-icons)
 
-;; Multiple cursor in Emacs needs to be installed with M-x  package-install RET multiple-cursors RET
+;; Multiple cursor in Emacs 
 (use-package multiple-cursors
   :ensure t)
 
@@ -697,7 +705,6 @@
   :ensure t
   :config
   (beacon-mode 1))
-
 
 ;; Better tex
 (use-package tex
@@ -737,3 +744,17 @@
       )
 
 )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(typescript-mode dap-mode yatemplate yasnippet-snippets which-key vterm visual-fill-column tree-sitter-langs rustic restclient rainbow-delimiters prettier-js pdf-tools org-bullets multiple-cursors move-dup magit lsp-ui lsp-tailwindcss lsp-ivy jtsx ivy-rich goto-line-preview flycheck emmet-mode doom-themes doom-modeline dired-single dashboard counsel-projectile company-box clang-format beacon auctex all-the-icons-dired))
+ '(warning-suppress-types '((comp) (comp))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
