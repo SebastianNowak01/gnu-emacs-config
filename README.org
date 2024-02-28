@@ -165,9 +165,8 @@ Startup screen that allows me to jump to recent files and projects.
     (dashboard-setup-startup-hook)
     (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
     (setq dashboard-items '(
-                            (recents  . 4)
-                            (projects . 3)
-                            (agenda . 5)
+                            (recents  . 5)
+                            (projects . 5)
                             )))
 
 #+END_SRC
@@ -471,12 +470,9 @@ Emacs client/library to communicate with Debug Server and provide debugging func
   (use-package dap-mode
     :ensure t
     :config
-    (setq dap-auto-configure-mode t)
-    (require 'dap-node)
-    (require 'dap-cpptools))
+    (setq dap-auto-configure-mode t))
 
 #+END_SRC
-
 * Language specific configurations
 ** JTS mode
 #+BEGIN_SRC elisp
@@ -486,7 +482,8 @@ Emacs client/library to communicate with Debug Server and provide debugging func
     :config
     (setq typescript-indent-level 2)
     (add-hook 'typescript-mode-hook 'lsp)
-    (add-hook 'typescript-mode-hook 'prettier-js-mode))
+    (add-hook 'typescript-mode-hook 'prettier-js-mode)
+    (require 'dap-node))
 
 #+END_SRC
 ** JTSX mode
@@ -544,14 +541,14 @@ jtsx-install-treesit-language
     (add-hook 'jtsx-tsx-mode-hook 'lsp)
     (add-hook 'jtsx-tsx-mode-hook 'tree-sitter-mode)
     (add-hook 'jtsx-tsx-mode-hook 'prettier-js-mode)
-    (add-hook 'jtsx-tsx-mode-hook 'emmet-mode))
+    (add-hook 'jtsx-tsx-mode-hook 'emmet-mode)
+    (require 'dap-node))
 
   (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-jsx-mode . tsx))
   (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-tsx-mode . tsx))
 
 #+END_SRC
 ** Tailwind CSS mode
-Proper working was tested only with jtsx mode for now
 #+BEGIN_SRC elisp
   ;; Tailwind mode config
   (use-package lsp-tailwindcss
@@ -583,6 +580,18 @@ Proper working was tested only with jtsx mode for now
     (setq css-indent-offset 2))
 
 #+END_SRC
+** Python mode
+To have a working debugger you have to install debugpy with following command:
+pip install debugpy.
+#+BEGIN_SRC elisp
+;; Python mode config
+(use-package python
+  :config
+  (add-hook 'python-mode-hook 'lsp)
+  (require 'dap-python)
+  (setq dap-python-debugger 'debugpy))
+  
+#+END_SRC
 ** C/C++ mode
 #+BEGIN_SRC elisp
   ;; C/C++ mode config
@@ -592,7 +601,7 @@ Proper working was tested only with jtsx mode for now
   (setq-default c++-basic-offset 4)
   (add-hook 'c++-mode-hook 'rebind)
   (add-hook 'c++-mode-hook (lambda () (local-unset-key (kbd"C-M-h"))))
-
+  (require 'dap-cpptools)
   ;; Formatter for C modes
   (use-package clang-format
     :ensure t)
