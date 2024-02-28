@@ -549,6 +549,9 @@ jtsx-install-treesit-language
 
 #+END_SRC
 ** Tailwind CSS mode
+For proper working you have to install tailwind css lsp server:
+M-x lsp-install-server
+tailwindcss
 #+BEGIN_SRC elisp
   ;; Tailwind mode config
   (use-package lsp-tailwindcss
@@ -871,6 +874,10 @@ Minor functions to tweak Emacs to my liking.
 
   ;; Jump to desired line
   (use-package goto-line-preview
+    :ensure t)
+
+  ;; Add automatic jsdoc generation
+  (use-package jsdoc
     :ensure t)
 
   ;; Enables downcasing region
