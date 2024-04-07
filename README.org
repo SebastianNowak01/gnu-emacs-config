@@ -144,7 +144,6 @@ Set up (use-package).
     (package-refresh-contents))
 
   (require 'use-package)
-  (require 'quelpa-use-package)
   (setq use-package-always-ensure t)
 
 #+END_SRC
@@ -166,9 +165,8 @@ Startup screen that allows me to jump to recent files and projects.
     (dashboard-setup-startup-hook)
     (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
     (setq dashboard-items '(
-                            (recents  . 4)
-                            (projects . 3)
-                            (agenda . 5)
+                            (recents  . 5)
+                            (projects . 5)
                             )))
 
 #+END_SRC
@@ -242,6 +240,8 @@ Incremental parsing system that helps with code highlighting and grammar bundles
     :config
     (tree-sitter-require 'tsx)
     (global-tree-sitter-mode)
+    (setq treesit-language-source-alist
+          '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 #+END_SRC
@@ -472,11 +472,10 @@ Emacs client/library to communicate with Debug Server and provide debugging func
   (use-package dap-mode
     :ensure t
     :config
-    (setq dap-auto-configure-mode t)
-    (require 'dap-node)
-    (require 'dap-cpptools))
+    (setq dap-auto-configure-mode t))
 
 #+END_SRC
+<<<<<<< HEAD
 
 * Copilot
 Enables Github Copilot
@@ -496,16 +495,21 @@ Enables Github Copilot
   (add-hook 'prog-mode-hook 'copilot-mode)
   (global-set-key (kbd "C-M-=") 'copilot-accept-completion)
 #+END_SRC 
+=======
+>>>>>>> origin/main
 * Language specific configurations
 ** JTS mode
 #+BEGIN_SRC elisp
   ;;JTS mode config
   (use-package typescript-mode
     :mode "\\.[jt]s\\'"
+    :after (tree-sitter)
     :config
     (setq typescript-indent-level 2)
     (add-hook 'typescript-mode-hook 'lsp)
-    (add-hook 'typescript-mode-hook 'prettier-js-mode))
+    (add-hook 'typescript-mode-hook 'prettier-js-mode)
+    (add-hook 'find-file-hook (lambda () (treesit-parser-create 'typescript)))    
+    (require 'dap-node))
 
 #+END_SRC
 ** JTSX mode
@@ -563,7 +567,8 @@ jtsx-install-treesit-language
     (add-hook 'jtsx-tsx-mode-hook 'lsp)
     (add-hook 'jtsx-tsx-mode-hook 'tree-sitter-mode)
     (add-hook 'jtsx-tsx-mode-hook 'prettier-js-mode)
-    (add-hook 'jtsx-tsx-mode-hook 'emmet-mode))
+    (add-hook 'jtsx-tsx-mode-hook 'emmet-mode)
+    (require 'dap-node))
 
   (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-jsx-mode . tsx))
   (add-to-list 'tree-sitter-major-mode-language-alist '(jtsx-tsx-mode . tsx))
@@ -604,6 +609,18 @@ tailwindcss
     (setq css-indent-offset 2))
 
 #+END_SRC
+** Python mode
+To have a working debugger you have to install debugpy with following command:
+pip install debugpy.
+#+BEGIN_SRC elisp
+;; Python mode config
+(use-package python
+  :config
+  (add-hook 'python-mode-hook 'lsp)
+  (require 'dap-python)
+  (setq dap-python-debugger 'debugpy))
+  
+#+END_SRC
 ** C/C++ mode
 #+BEGIN_SRC elisp
   ;; C/C++ mode config
@@ -613,7 +630,7 @@ tailwindcss
   (setq-default c++-basic-offset 4)
   (add-hook 'c++-mode-hook 'rebind)
   (add-hook 'c++-mode-hook (lambda () (local-unset-key (kbd"C-M-h"))))
-
+  (require 'dap-cpptools)
   ;; Formatter for C modes
   (use-package clang-format
     :ensure t)
@@ -905,6 +922,10 @@ Minor functions to tweak Emacs to my liking.
         )
 
 #+END_SRC
+** JsDoc setup
+When I wanted to use JsDoc in my typescript setup there was an error that said "no parser found" so first I had to install typescript grammar. With the help of tutorial below:
+[[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter]]
+I managed to do so by adding typescript treesitter list of grammars (in my treesit section) and then modifying accordingly my typescript mode setup by adding a hook creating a typescript parser for this buffer.
 * Speed up Emacs start up (2/2)
 This command helps speed up Emacs startup.
 #+BEGIN_SRC elisp
